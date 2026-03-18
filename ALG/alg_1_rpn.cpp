@@ -73,7 +73,7 @@ bool evaluate_rpn(const std::string& line, double& result, std::string& err) {
 int main() {
     std::string line;
     while (true) {
-        std::cout << "Zadaj RPN (alebo 'quit'): ";
+        std::cout << "Zadaj post-fix vyraz (alebo 'quit'): ";
         if (!std::getline(std::cin, line)) break;
         if (line == "quit") break;
 
