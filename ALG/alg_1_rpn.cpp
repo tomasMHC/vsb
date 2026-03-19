@@ -11,7 +11,12 @@ static bool is_number_token(const std::string& tok, double& out) {
     try {
         size_t pos = 0;
         out = std::stod(tok, &pos);
-        return pos == tok.size(); // žiadny zvyšok
+        if (pos == tok.size()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     } catch (...) {
         return false;
     }
@@ -26,7 +31,7 @@ bool evaluate_rpn(const std::string& line, double& result, std::string& err) {
         double val;
         if (is_number_token(tok, val)) {
             st.push(val);
-            continue;
+            continue;                   // pokracuje pokym je cislo, ked nie je cislo, tak nasleduje dalsi if nizsie.
         }
 
         if (tok.size() == 1) {
@@ -52,7 +57,7 @@ bool evaluate_rpn(const std::string& line, double& result, std::string& err) {
                         r = a / b; break;
                 }
                 st.push(r);
-                continue;
+                continue;               // skoci na citanie dalsieho tokenu iss >> tok vo while.
             }
         }
 
