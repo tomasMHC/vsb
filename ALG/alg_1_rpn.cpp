@@ -2,12 +2,10 @@
 #include <sstream>
 #include <stack>
 #include <string>
-#include <vector>
 #include <cctype>
 #include <cmath>
 
 static bool is_number_token(const std::string& tok, double& out) {
-    // Skús parse cez stod a skontroluj, že sa spotreboval celý token
     try {
         size_t pos = 0;
         out = std::stod(tok, &pos);
@@ -43,7 +41,6 @@ bool evaluate_rpn(const std::string& line, double& result, std::string& err) {
                 }
                 double b = st.top(); st.pop(); // pravý operand
                 double a = st.top(); st.pop(); // ľavý operand
-
                 double r = 0.0;
                 switch (op) {
                     case '+': r = a + b; break;
@@ -75,19 +72,44 @@ bool evaluate_rpn(const std::string& line, double& result, std::string& err) {
     return true;
 }
 
+int result_print(std::string& line) {
+    double res = 0.0;
+    std::string err;
+    std::cout << "Vyraz: " << line << "\n";
+    if (evaluate_rpn(line, res, err)) {
+            std::cout << "Vysledok: " << res << "\n";
+            return 0;
+        } else {
+            std::cout << "Chyba: " << err << "\n";
+            return 0;
+        }
+}
+
 int main() {
+
+    // demonstrace
     std::string line;
+    // Prilis vela operandov
+    line = "1 2 3 +";
+    result_print(line);
+    // Nedostatok operandov
+    line = "8 * 6 -";
+    result_print(line);
+    // Delenie nulou
+    line = " 4 5 + 2 2 - /";
+    result_print(line);
+    // Neznamy / neplatny token
+    line = "9 5 x";
+    result_print(line);
+    // spravna funkcia
+    line = "7 5 - 6 * 9 + 7 /";
+    result_print(line);
+
+    // smycka kalkulacky
     while (true) {
         std::cout << "Zadaj post-fix vyraz (alebo 'quit'): ";
         if (!std::getline(std::cin, line)) break;
-        if (line == "quit") break;
-
-        double res = 0.0;
-        std::string err;
-        if (evaluate_rpn(line, res, err)) {
-            std::cout << "Vysledok: " << res << "\n";
-        } else {
-            std::cout << "Chyba: " << err << "\n";
-        }
-    }
+        if (line == "quit") break;        
+        result_print(line);
+}
 }

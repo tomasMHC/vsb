@@ -20,7 +20,7 @@
     section .text
 
     ; functions
-    ;rdi, rsi, rfdx, rcx, r8, r9
+    ;rdi, rsi, rdx, rcx, r8, r9
 
     global sude_max
 sude_max:
