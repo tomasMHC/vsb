@@ -1,0 +1,19 @@
+por0087@linedu:~/Documents/homework_3$ ./homework_3-test 400000 4
+Random numbers generetion started...
+Thread 0 started from 0 with length 400000...
+Sorting in thread 0 is done.
+-*-*-*-* Sorting with 1 threads is done in 80925 ms. *-*-*-*-*-
+Merging is done in 0 ms.
+Thread 0 started from 0 with length 100000...
+Thread 1 started from 100000 with length 100000...
+Thread 2 started from 200000 with length 100000...
+Thread 3 started from 300000 with length 100000...
+Sorting in thread 1 is done.
+Sorting in thread 3 is done.
+Sorting in thread 0 is done.
+Sorting in thread 2 is done.
+-*-*-*-* Sorting with 4 threads is done in 10184 ms. *-*-*-*-*-
+Merging is done in 3 ms.
+Array 1: sorted
+Array 2: sorted
+-*-*-*-* Arrays are equal. *-*-*-*-*
