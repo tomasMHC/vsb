@@ -1,0 +1,93 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="uml" name="UML">
+    <mxGraphModel dx="1420" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Stock -->
+        <mxCell id="stock" value="Stock&#xa;---------------------&#xa;- ticker: string&#xa;- price: double&#xa;---------------------&#xa;+ getTicker()&#xa;+ getPrice()&#xa;+ setPrice()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="40" y="40" width="180" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- Position -->
+        <mxCell id="position" value="Position&#xa;---------------------&#xa;- stock: Stock*&#xa;- quantity: int&#xa;- avgPrice: double&#xa;---------------------&#xa;+ add()&#xa;+ remove()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="260" y="40" width="180" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- Portfolio -->
+        <mxCell id="portfolio" value="Portfolio&#xa;---------------------&#xa;- positions: vector&#xa;---------------------&#xa;+ addPosition()&#xa;+ removePosition()&#xa;+ getTotalValue()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="480" y="40" width="200" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- Trader -->
+        <mxCell id="trader" value="Trader&#xa;---------------------&#xa;- name: string&#xa;- cash: double&#xa;- portfolio: Portfolio&#xa;---------------------&#xa;+ buy()&#xa;+ sell()&#xa;+ getPortfolio()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="720" y="40" width="200" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Order (abstract) -->
+        <mxCell id="order" value="&lt;&lt;abstract&gt;&gt;&#xa;Order&#xa;---------------------&#xa;- trader: Trader*&#xa;- stock: Stock*&#xa;- quantity: int&#xa;---------------------&#xa;+ execute() = 0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;" vertex="1">
+          <mxGeometry x="40" y="300" width="220" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- BuyOrder -->
+        <mxCell id="buyorder" value="BuyOrder&#xa;---------------------&#xa;+ execute()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="300" y="300" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- SellOrder -->
+        <mxCell id="sellorder" value="SellOrder&#xa;---------------------&#xa;+ execute()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="500" y="300" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- MarketOrder -->
+        <mxCell id="marketorder" value="MarketOrder&#xa;---------------------&#xa;+ execute()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="700" y="300" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- LimitOrder -->
+        <mxCell id="limitorder" value="LimitOrder&#xa;---------------------&#xa;- limitPrice: double&#xa;---------------------&#xa;+ execute()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="900" y="300" width="200" height="160" as="geometry"/>
+        </mxCell>
+
+        <!-- Market -->
+        <mxCell id="market" value="Market&#xa;---------------------&#xa;- stocks: vector&#xa;- traders: vector&#xa;- orders: vector&lt;Order*&gt;&#xa;---------------------&#xa;+ addStock()&#xa;+ addTrader()&#xa;+ addOrder()&#xa;+ runSimulation()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry x="40" y="560" width="260" height="220" as="geometry"/>
+        </mxCell>
+
+        <!-- Relationships -->
+
+        <!-- Portfolio -> Position -->
+        <mxCell id="edge1" edge="1" parent="1" source="portfolio" target="position"
+          style="endArrow=diamond;endFill=1;"/>
+        
+        <!-- Trader -> Portfolio -->
+        <mxCell id="edge2" edge="1" parent="1" source="trader" target="portfolio"
+          style="endArrow=diamond;endFill=1;"/>
+
+        <!-- Position -> Stock -->
+        <mxCell id="edge3" edge="1" parent="1" source="position" target="stock"
+          style="endArrow=block;"/>
+
+        <!-- Order inheritance -->
+        <mxCell id="edge4" edge="1" parent="1" source="buyorder" target="order"
+          style="startArrow=block;startFill=1;"/>
+        <mxCell id="edge5" edge="1" parent="1" source="sellorder" target="order"
+          style="startArrow=block;startFill=1;"/>
+        <mxCell id="edge6" edge="1" parent="1" source="marketorder" target="order"
+          style="startArrow=block;startFill=1;"/>
+        <mxCell id="edge7" edge="1" parent="1" source="limitorder" target="order"
+          style="startArrow=block;startFill=1;"/>
+
+        <!-- Market composition -->
+        <mxCell id="edge8" edge="1" parent="1" source="market" target="stock"
+          style="endArrow=diamond;endFill=1;"/>
+        <mxCell id="edge9" edge="1" parent="1" source="market" target="trader"
+          style="endArrow=diamond;endFill=1;"/>
+        <mxCell id="edge10" edge="1" parent="1" source="market" target="order"
+          style="endArrow=diamond;endFill=1;"/>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
