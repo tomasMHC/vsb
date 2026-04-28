@@ -18,6 +18,7 @@ class Instrument {
         virtual string getType() const = 0;                       
         virtual void updatePrice(double p) = 0;                 // abstraktne metody - musia být implementované v dědičných třídách
         virtual double calculateFee() const = 0;                  // pretizena metoda
+        virtual double getStrike() const { return 0.0; }             // pro získání strike price, vrací 0 pro Stock
 };
 string Instrument::getSymbol() {
     return this->symbol;
@@ -64,18 +65,18 @@ class Option: public Instrument {
         double underlyingPrice;
         int daysToExp;
         double premium;
-
+        Stock* underlyingStock;
     public:
-        Option(string n, double p);
+        Option(string n, double p, Stock* underlying);
         double getStrikePrice();
         string getExpirationDate();
         double calculateFee() const;
-        Stock* getUnderlying();
         virtual string getType() const = 0;
         virtual void updatePrice(double p) = 0;
-
+        virtual double getStrike() const override { return this->strikePrice; }
 };
-Option::Option(string n, double p) {
+Option::Option(string n, double p, Stock* underlying) {
+    this->underlyingStock = underlying;
     this->name = n;
     this->price = p;
 }
@@ -89,28 +90,30 @@ double Option::calculateFee() const {
 
 class OptionCall: public Option {
     public:
-        OptionCall(string n, double p, string expDate, double strikePrice);
+        OptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         double intrinsicValue();
         void updatePrice(double p);
         string getType() const;
 
 };
-OptionCall::OptionCall(string n, double p, string expDate, double strikePrice) : Option(n, p) {
+OptionCall::OptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying) : Option(n, p, underlying) {
     this->strikePrice = strikePrice;
     this->daysToExp = 30;                   
-    this->premium = 0.05 * p; 
+    this->premium = 0.15 * p; 
+    this->underlyingPrice = underlying->getPrice();
 }
 class OptionPut: public Option {
     public:
-        OptionPut(string n, double p, string expDate, double strikePrice);
+        OptionPut(string n, double p, string expDate, double strikePrice, Stock* underlying);
         double intrinsicValue();
         void updatePrice(double p);
         string getType() const;
 };
-OptionPut::OptionPut(string n, double p, string expDate, double strikePrice) : Option(n, p) {
+OptionPut::OptionPut(string n, double p, string expDate, double strikePrice, Stock* underlying) : Option(n, p, underlying) {
     this->strikePrice = strikePrice;
     this->daysToExp = 30;                   
-    this->premium = 0.05 * p; 
+    this->premium = 0.10 * p; 
+    this->underlyingPrice = underlying->getPrice();
 }
 double OptionCall::intrinsicValue() {
     return max(0.0, this->underlyingPrice - this->strikePrice);
@@ -125,10 +128,12 @@ string OptionPut::getType() const {
     return "OptionPut";
 }
 void OptionCall::updatePrice(double p) {
-    this->price = p;
+    double underlyingPrice = underlyingStock->getPrice();
+    this->price = max(0.0, underlyingPrice - strikePrice+ premium - daysToExp*0.1) ;
 }
 void OptionPut::updatePrice(double p) {
-    this->price = p;
+    double underlyingPrice = underlyingStock->getPrice();
+    this->price = max(0.0, strikePrice - underlyingPrice+ premium + daysToExp*0.1) ;
 }
 
 class Order {
@@ -265,12 +270,13 @@ class Market {
         Order* addSell(Sell* o, Market* m, Client* c);
         Order* addBuy(Buy* o, Market* m, Client* c);
 
-        Instrument* addInstrument(string type, string n, double p, string expDate, double strikePrice);
+        Instrument* addInstrument(string type, string n, double p, string expDate, double strikePrice, Stock* underlying);
         Instrument* addInstrument(string type, string n, double p, double d);
         Instrument* addInstrument(string type, string n, double p);
         Client* addTrader(string t);
         void printTraders();
         void printInstruments();
+        void generateOptionsForStock(Stock* s);
 };
 
 
@@ -304,6 +310,7 @@ Instrument* Market::addInstrument(string type, string n, double p) {
         Stock *newObject = new Stock(n, p, 0);
         this->instruments[this->instrumentCount] = newObject;
         this->instrumentCount += 1;
+        generateOptionsForStock(newObject);
         return newObject;
     }
     return nullptr;
@@ -314,25 +321,28 @@ Instrument* Market::addInstrument(string type, string n, double p, double d) {
         Stock *newObject = new Stock(n, p, d);
         this->instruments[this->instrumentCount] = newObject;
         this->instrumentCount += 1;
+        generateOptionsForStock(newObject);
         return newObject;
     }
     return nullptr;
 }
 
-Instrument* Market::addInstrument(string type,string n, double p, string expDate, double strikePrice) {
+Instrument* Market::addInstrument(string type,string n, double p, string expDate, double strikePrice, Stock* underlying) {
     if (type == "OptionCall") {
-        OptionCall *newObject = new OptionCall(n, p, expDate, strikePrice);
+        OptionCall *newObject = new OptionCall(n, p, expDate, strikePrice, underlying);
         this->instruments[this->instrumentCount] = newObject;
         this->instrumentCount += 1;
         return newObject;
     } else if (type == "OptionPut") {
-        OptionPut *newObject = new OptionPut(n, p, expDate, strikePrice); 
+        OptionPut *newObject = new OptionPut(n, p, expDate, strikePrice, underlying); 
         this->instruments[this->instrumentCount] = newObject;
         this->instrumentCount += 1;
         return newObject;
     }
     return nullptr;
 }
+
+
 Client* Market::addTrader(string t) {
     Client *newObject = new Client(tradersCount, t);
     this->traders[this->tradersCount] = newObject;
@@ -357,29 +367,46 @@ Order* Market::addBuy(Buy* o, Market* m, Client* c) {
     cout << "Processing Buy order on market " << m->getName() << ": " << o->getQuantity() << " of " << o->getInstrument()->getName() << " at price " << o->getPrice() << endl;
     return o;
 }
+void Market::generateOptionsForStock(Stock* s) {
+    double price = s->getPrice();
+
+    double strikes[] = { price - 10, price, price + 10 };
+
+    for (double strike : strikes) {
+        addInstrument("OptionCall", s->getName() + " Call", s->getPrice(), "2024-12-31", strike,s)->updatePrice(s->getPrice());  // Initial price calculation based on the underlying stock
+        addInstrument("OptionPut",  s->getName() + " Put",  s->getPrice(), "2024-12-31", strike,s)->updatePrice(s->getPrice());
+    }
+}
+
 void Market::printTraders() {
-    cout << "Traders in " << this->name << ":" << endl;
+    cout << "List of Traders: " << this->name << ":" << endl;
     for (int i = 0; i < this->tradersCount; i++) {
         cout << " - " << this->traders[i]->getName() << endl;
     }
 }
 void Market::printInstruments() {
-    cout << "Instruments in " << this->name << ":" << endl;
+    cout << "List of Instruments: " << this->name << ":" << endl;
     for (int i = 0; i < this->instrumentCount; i++) {
-        cout << " - " << this->instruments[i]->getType() << ": " << this->instruments[i]->getName() << " (" << this->instruments[i]->getPrice() << ")" << endl;
+        if (this->instruments[i]->getType() == "Stock") {
+            cout << " - " << this->instruments[i]->getType() << ": " << this->instruments[i]->getName() << ",   Price: " << this->instruments[i]->getPrice() << endl;
+        } else {
+            cout << " - " << this->instruments[i]->getType() << ": " << this->instruments[i]->getName() << ",   Strike: " << this->instruments[i]->getStrike() << ", Price: " << this->instruments[i]->getPrice() << endl;
+        }
     }
 }
 
 int main() {
-    Market* market1 = new Market("NASDAQ", 10, 10);
+    Market* market1 = new Market("NASDAQ", 100, 10);
         market1->addInstrument("Stock", "AAPL", 150.0, 0.5);
-        market1->addInstrument("OptionCall", "AAPL Call", 5.0, "2024-12-31", 160.0);
+        market1->addInstrument("Stock", "GOOGL", 280.0, 4.0);
+        // market1->addInstrument("OptionCall", "AAPL Call", 5.0, "2024-12-31", 160.0);
         market1->addTrader("Tomas");
         market1->addTrader("Betka");
 
-    Market* market2 = new Market("BCPPX Praha", 10, 10);
+    Market* market2 = new Market("BCPPX Praha", 100, 10);
         market2->addInstrument("Stock", "ČEZ", 100.0, 0.3);
-        market2->addInstrument("OptionPut", "ČEZ Put", 3.0, "2024-12-31", 90.0);
+        market2->addInstrument("Stock","Moneta", 210.0, 30.0);
+        // market2->addInstrument("OptionPut", "ČEZ Put", 3.0, "2024-12-31", 90.0);
         market2->addTrader("Jirka");
         market2->addTrader("Petr");
         
@@ -397,5 +424,13 @@ int main() {
 
     market1->getInstruments()[0]->updatePrice(155.0);
     cout << "Updated price of AAPL: " << market1->getInstruments()[0]->getPrice() << endl;
+
+    market1->printInstruments();
+    for (int i = 0; i < market1->getInstrumentsCount(); i++) {
+        if (market1->getInstruments()[i]->getType() == "OptionCall") {
+            market1->getInstruments()[i]->updatePrice(market1->getInstruments()[0]->getPrice());
+            cout << "Updated price of " << market1->getInstruments()[i]->getName() << ": " << market1->getInstruments()[i]->getStrike() << "  " << market1->getInstruments()[i]->getPrice() << endl;
+        }
+    }
     return 0;
 }
