@@ -1,0 +1,182 @@
+\doxysection{alg\+\_\+projekt\+\_\+tp.\+cpp File Reference}
+\hypertarget{alg__projekt__tp_8cpp}{}\label{alg__projekt__tp_8cpp}\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+
+
+Dokumentácia k projektu ALG – spracovanie grafu, DFS, komponenty, mosty.  
+
+
+{\ttfamily \#include $<$bits/stdc++.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$stack$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+Include dependency graph for alg\+\_\+projekt\+\_\+tp.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{alg__projekt__tp_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ pair$<$ int, int $>$ $>$ \mbox{\hyperlink{alg__projekt__tp_8cpp_a5e047988a90e0f730859b9911a9ce7c5}{read\+\_\+lines}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alg__projekt__tp_8cpp_a7917996444f25674888909de25d6b07f}{dfs\+Rec}} (vector$<$ vector$<$ int $>$ $>$ \&adj, vector$<$ bool $>$ \&visited, int s, vector$<$ int $>$ \&res)
+\begin{DoxyCompactList}\small\item\em Rekurzívna funkcia pre prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily s}, a pridá ich do výsledného zoznamu {\ttfamily res}. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \mbox{\hyperlink{alg__projekt__tp_8cpp_a60ce384892a0d6715e4dbb15025fa653}{dfs}} (vector$<$ vector$<$ int $>$ $>$ \&adj)
+\begin{DoxyCompactList}\small\item\em Prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol. Výsledkom je zoznam všetkých vrcholov v poradí, v akom boli navštívené. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alg__projekt__tp_8cpp_a44a753d9e60195c46feb1a709c386bfb}{dfs\+\_\+comp}} (int v, int c, vector$<$ vector$<$ int $>$ $>$ \&adj, vector$<$ int $>$ \&comp)
+\begin{DoxyCompactList}\small\item\em Rekurzívna funkcia pre hľadanie komponentov grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily v}, a priradí im číslo komponentu {\ttfamily c} v zozname {\ttfamily comp}. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{alg__projekt__tp_8cpp_a754881021c10d5dc2aae2872e7bf6e35}{make\+\_\+adj\+\_\+list}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges)
+\begin{DoxyCompactList}\small\item\em Vytvorenie zoznamu susedov zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{alg__projekt__tp_8cpp_a6f863a653693143360d25d7ebaf15a99}{components\+\_\+count}} (vector$<$ vector$<$ int $>$ $>$ \&adj)
+\begin{DoxyCompactList}\small\item\em Spočítanie počtu komponentov grafu. Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol, aby označila všetky vrcholy v tej istej komponente ako navštívené. Počet komponentov sa zvyšuje o 1 vždy, keď sa nájde nový nenavštívený vrchol. \end{DoxyCompactList}\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{alg__projekt__tp_8cpp_ac6f67ffe8d58155eaf313be80992fc48}{find\+\_\+bridges}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges)
+\begin{DoxyCompactList}\small\item\em Hľadanie mostov v grafe. Táto funkcia prejde všetky hrany grafu a v prípade, že odstránením danej hrany sa zvýši počet komponentov, ide o most. Mosty sú uložené v zozname {\ttfamily bridges}, kde hodnota 1 znamená, že hrana je mostom, a hodnota 0 znamená, že hrana nie je mostom. Funkcia vytvorí kópiu zoznamu hrán, aby mohla testovať odstránenie každej hrany bez ovplyvnenia pôvodného zoznamu. Počet komponentov sa porovnáva pred a po odstránení hrany, aby sa určil, či ide o most. \end{DoxyCompactList}\item 
+\Hypertarget{alg__projekt__tp_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{alg__projekt__tp_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int {\bfseries main} ()
+\begin{DoxyCompactList}\small\item\em Hlavná funkcia programu. Táto funkcia načíta hrany z textového súboru, vytvorí zoznam susedov, vypíše zoznam hrán a zoznam susedov, spočíta počet komponentov, nájde mosty, navrhne odstránenie niektorých hrán a pridanie nových hrán medzi komponentami, a nakoniec vypíše počet komponentov po navrhovanej oprave. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Dokumentácia k projektu ALG – spracovanie grafu, DFS, komponenty, mosty. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{alg__projekt__tp_8cpp_a6f863a653693143360d25d7ebaf15a99}\label{alg__projekt__tp_8cpp_a6f863a653693143360d25d7ebaf15a99} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!components\_count@{components\_count}}
+\index{components\_count@{components\_count}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{components\_count()}{components\_count()}}
+{\footnotesize\ttfamily int components\+\_\+count (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+
+
+Spočítanie počtu komponentov grafu. Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol, aby označila všetky vrcholy v tej istej komponente ako navštívené. Počet komponentov sa zvyšuje o 1 vždy, keď sa nájde nový nenavštívený vrchol. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\Hypertarget{alg__projekt__tp_8cpp_a60ce384892a0d6715e4dbb15025fa653}\label{alg__projekt__tp_8cpp_a60ce384892a0d6715e4dbb15025fa653} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!dfs@{dfs}}
+\index{dfs@{dfs}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{dfs()}{dfs()}}
+{\footnotesize\ttfamily vector$<$ int $>$ dfs (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+
+
+Prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol. Výsledkom je zoznam všetkých vrcholov v poradí, v akom boli navštívené. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector$<$int$>$ 
+\end{DoxyReturn}
+\Hypertarget{alg__projekt__tp_8cpp_a44a753d9e60195c46feb1a709c386bfb}\label{alg__projekt__tp_8cpp_a44a753d9e60195c46feb1a709c386bfb} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!dfs\_comp@{dfs\_comp}}
+\index{dfs\_comp@{dfs\_comp}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{dfs\_comp()}{dfs\_comp()}}
+{\footnotesize\ttfamily void dfs\+\_\+comp (\begin{DoxyParamCaption}\item[{int}]{v,  }\item[{int}]{c,  }\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj,  }\item[{vector$<$ int $>$ \&}]{comp }\end{DoxyParamCaption})}
+
+
+
+Rekurzívna funkcia pre hľadanie komponentov grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily v}, a priradí im číslo komponentu {\ttfamily c} v zozname {\ttfamily comp}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & \\
+\hline
+{\em c} & \\
+\hline
+{\em adj} & \\
+\hline
+{\em comp} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{alg__projekt__tp_8cpp_a7917996444f25674888909de25d6b07f}\label{alg__projekt__tp_8cpp_a7917996444f25674888909de25d6b07f} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!dfsRec@{dfsRec}}
+\index{dfsRec@{dfsRec}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{dfsRec()}{dfsRec()}}
+{\footnotesize\ttfamily void dfs\+Rec (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj,  }\item[{vector$<$ bool $>$ \&}]{visited,  }\item[{int}]{s,  }\item[{vector$<$ int $>$ \&}]{res }\end{DoxyParamCaption})}
+
+
+
+Rekurzívna funkcia pre prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily s}, a pridá ich do výsledného zoznamu {\ttfamily res}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+{\em visited} & \\
+\hline
+{\em s} & \\
+\hline
+{\em res} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{alg__projekt__tp_8cpp_ac6f67ffe8d58155eaf313be80992fc48}\label{alg__projekt__tp_8cpp_ac6f67ffe8d58155eaf313be80992fc48} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!find\_bridges@{find\_bridges}}
+\index{find\_bridges@{find\_bridges}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{find\_bridges()}{find\_bridges()}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ find\+\_\+bridges (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges }\end{DoxyParamCaption})}
+
+
+
+Hľadanie mostov v grafe. Táto funkcia prejde všetky hrany grafu a v prípade, že odstránením danej hrany sa zvýši počet komponentov, ide o most. Mosty sú uložené v zozname {\ttfamily bridges}, kde hodnota 1 znamená, že hrana je mostom, a hodnota 0 znamená, že hrana nie je mostom. Funkcia vytvorí kópiu zoznamu hrán, aby mohla testovať odstránenie každej hrany bez ovplyvnenia pôvodného zoznamu. Počet komponentov sa porovnáva pred a po odstránení hrany, aby sa určil, či ide o most. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edges} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$int$>$ 
+\end{DoxyReturn}
+\Hypertarget{alg__projekt__tp_8cpp_a754881021c10d5dc2aae2872e7bf6e35}\label{alg__projekt__tp_8cpp_a754881021c10d5dc2aae2872e7bf6e35} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!make\_adj\_list@{make\_adj\_list}}
+\index{make\_adj\_list@{make\_adj\_list}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{make\_adj\_list()}{make\_adj\_list()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::vector$<$ int $>$ $>$ make\+\_\+adj\+\_\+list (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges }\end{DoxyParamCaption})}
+
+
+
+Vytvorenie zoznamu susedov zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edges} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::vector$<$int$>$$>$ 
+\end{DoxyReturn}
+\Hypertarget{alg__projekt__tp_8cpp_a5e047988a90e0f730859b9911a9ce7c5}\label{alg__projekt__tp_8cpp_a5e047988a90e0f730859b9911a9ce7c5} 
+\index{alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}!read\_lines@{read\_lines}}
+\index{read\_lines@{read\_lines}!alg\_projekt\_tp.cpp@{alg\_projekt\_tp.cpp}}
+\doxysubsubsection{\texorpdfstring{read\_lines()}{read\_lines()}}
+{\footnotesize\ttfamily std\+::vector$<$ pair$<$ int, int $>$ $>$ read\+\_\+lines (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$pair$<$int,int$>$$>$ 
+\end{DoxyReturn}

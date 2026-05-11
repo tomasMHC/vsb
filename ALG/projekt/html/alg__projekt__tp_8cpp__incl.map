@@ -1,0 +1,17 @@
+<map id="alg_projekt_tp.cpp" name="alg_projekt_tp.cpp">
+<area shape="rect" id="Node000001" title="Dokumentácia k projektu ALG – spracovanie grafu, DFS, komponenty, mosty." alt="" coords="300,5,443,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,116,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,33,125,78,123,73,321,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="141,79,221,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="342,33,226,76,224,71,340,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="245,79,319,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="359,33,309,72,306,68,355,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="343,79,400,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="374,31,374,65,369,65,369,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="425,79,483,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="386,29,432,67,428,72,383,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="508,79,571,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="399,28,500,71,498,76,397,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="595,79,670,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="414,28,583,74,581,79,413,33"/>
+</map>

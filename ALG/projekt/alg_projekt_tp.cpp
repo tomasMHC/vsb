@@ -6,10 +6,16 @@
 #include <vector>
 #include <sstream>
 using namespace std;
+/**
+ * @file alg_projekt_tp.cpp
+ * @brief Dokumentácia k projektu ALG – spracovanie grafu, DFS, komponenty, mosty.
+ */
 
-vector<vector<pair<int,int>>> adj;   // adj[v] = { (to, edge_id) }
-vector<int> comp;                    // komponenta každého vrcholu
-
+/**
+ * @brief Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy.
+ * @param filename 
+ * @return std::vector<pair<int,int>> 
+ */
 std::vector<pair<int,int>> read_lines(const std::string& filename) {
     std::ifstream file(filename);
     vector<pair<int,int>> edges;
@@ -20,19 +26,30 @@ std::vector<pair<int,int>> read_lines(const std::string& filename) {
     return edges;
 }
 
+/**
+ * @brief Rekurzívna funkcia pre prechod grafu metodou DFS (Depth-First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu `s`, a pridá ich do výsledného zoznamu `res`.
+ * 
+ * @param adj 
+ * @param visited 
+ * @param s 
+ * @param res 
+ */
 void dfsRec(vector<vector<int>> &adj, vector<bool> &visited, int s, vector<int> &res) {
-    
     visited[s] = true;
-
     res.push_back(s);
 
-    // Recursively visit all adjacent 
-    // vertices that are not visited yet
+    // Recursively visit all adjacent vertices that are not visited yet
     for (int i : adj[s])
         if (visited[i] == false)
             dfsRec(adj, visited, i, res);
 }
 
+/**
+ * @brief Prechod grafu metodou DFS (Depth-First Search). Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu `dfsRec` na tento vrchol. Výsledkom je zoznam všetkých vrcholov v poradí, v akom boli navštívené.
+ * 
+ * @param adj 
+ * @return vector<int> 
+ */
 vector<int> dfs(vector<vector<int>> &adj) {
     vector<bool> visited(adj.size(), false);
     vector<int> res;
@@ -46,6 +63,15 @@ vector<int> dfs(vector<vector<int>> &adj) {
     }
     return res;
 }
+
+/**
+ * @brief Rekurzívna funkcia pre hľadanie komponentov grafu metodou DFS (Depth-First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu `v`, a priradí im číslo komponentu `c` v zozname `comp`.
+ * 
+ * @param v 
+ * @param c 
+ * @param adj 
+ * @param comp 
+ */
 void dfs_comp(int v, int c, vector<vector<int>> &adj, vector<int> &comp) {
     comp[v] = c;
     for (int to : adj[v]) {
@@ -54,6 +80,12 @@ void dfs_comp(int v, int c, vector<vector<int>> &adj, vector<int> &comp) {
     }
 }
 
+/**
+ * @brief Vytvorenie zoznamu susedov zo zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája.
+ * 
+ * @param edges 
+ * @return std::vector<std::vector<int>> 
+ */
 std::vector<std::vector<int>> make_adj_list(std::vector<std::pair<int,int>> &edges) {
     int maxv = 0;
     // najprv musime zistit kolko vrcholov mame
@@ -68,6 +100,12 @@ std::vector<std::vector<int>> make_adj_list(std::vector<std::pair<int,int>> &edg
     return adj;
 }
 
+/**
+ * @brief Spočítanie počtu komponentov grafu. Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu `dfsRec` na tento vrchol, aby označila všetky vrcholy v tej istej komponente ako navštívené. Počet komponentov sa zvyšuje o 1 vždy, keď sa nájde nový nenavštívený vrchol.
+ * 
+ * @param adj 
+ * @return int 
+ */
 int components_count(vector<vector<int>> &adj) {
     vector<bool> visited(adj.size(), false);
     int components = 0;
@@ -81,6 +119,12 @@ int components_count(vector<vector<int>> &adj) {
     return components;
 }
 
+/**
+ * @brief Hľadanie mostov v grafe. Táto funkcia prejde všetky hrany grafu a v prípade, že odstránením danej hrany sa zvýši počet komponentov, ide o most. Mosty sú uložené v zozname `bridges`, kde hodnota 1 znamená, že hrana je mostom, a hodnota 0 znamená, že hrana nie je mostom. Funkcia vytvorí kópiu zoznamu hrán, aby mohla testovať odstránenie každej hrany bez ovplyvnenia pôvodného zoznamu. Počet komponentov sa porovnáva pred a po odstránení hrany, aby sa určil, či ide o most.
+ * 
+ * @param edges 
+ * @return std::vector<int> 
+ */
 std::vector<int> find_bridges(std::vector<std::pair<int,int>> &edges) {
     std::vector<int> bridges(edges.size(), 0);
     std::vector<std::pair<int,int>> edges_copy = edges;
@@ -116,11 +160,13 @@ std::vector<int> find_bridges(std::vector<std::pair<int,int>> &edges) {
     return bridges;
 }
 
-
-
+/**
+ * @brief Hlavná funkcia programu. Táto funkcia načíta hrany z textového súboru, vytvorí zoznam susedov, vypíše zoznam hrán a zoznam susedov, spočíta počet komponentov, nájde mosty, navrhne odstránenie niektorých hrán a pridanie nových hrán medzi komponentami, a nakoniec vypíše počet komponentov po navrhovanej oprave.
+ */
 
 int main() {
     std::vector<std::pair<int,int>> edges;
+    int number_of_edges = 0;
     std::vector<std::vector<int>> adj;
     
     // načítanie hrán
@@ -136,6 +182,7 @@ int main() {
     // Vypis edges listu
     cout<<"Edges list: \n";
     for (auto &e : edges) {
+        number_of_edges++;
         cout << e.first << " " << e.second << "\n";
     }
     // Vypis adjacency listu
@@ -151,7 +198,12 @@ int main() {
     // Počet komponent    
     int num_components = components_count(adj);
     cout << "Pocet komponent: " << num_components << endl;
-    
+    if (num_components == 1) {
+        cout << "Graf je uz spojity, neni potreba zadne opravy.\n";
+        return 0;
+    }
+
+
     printf("DFS: \n");
     vector<int> comp(adj.size(), -1);
     vector<int> res = dfs(adj); 
@@ -160,7 +212,27 @@ int main() {
     
     cout << endl;
 
-    // Priradenie cisla komponenty kazdemu vrcholu
+
+
+    // Hľadanie mostov
+    vector<int> bridges = find_bridges(edges);
+    cout << "-*-*- Mosty -*-*- " << endl;
+    int i = 0;
+    for (int bridge : bridges) {
+        cout << "Je "<< edges[i].first << "-" << edges[i].second << " most?: " << bridge << " "  << "; " << endl;
+        i++;
+    }
+    int non_bridges_count = std::count(bridges.begin(), bridges.end(), 0);
+
+    if (non_bridges_count == 0) {
+        cout << "Vsetky hrany su mostami, neni mozna oprava.\n";
+        return 0;
+    }
+    else if (num_components > 1 && non_bridges_count >= (num_components - 1)) {
+        cout << "Je mozna oprava\n";
+    }
+
+        // Priradenie cisla komponenty kazdemu vrcholu
     int c = 0;
     for (int i = 0; i < adj.size(); i++) {
         if (comp[i] == -1) {
@@ -179,15 +251,6 @@ int main() {
         cout << "\n";
     }
 
-    // Hľadanie mostov
-    vector<int> bridges = find_bridges(edges);
-    cout << "-*-*- Mosty -*-*- " << endl;
-    int i = 0;
-    for (int bridge : bridges) {
-        cout << "Je "<< edges[i].first << "-" << edges[i].second << " most?: " << bridge << " "  << "; " << endl;
-        i++;
-    }
-
     // Zozbieranie hrán podľa komponentov
     vector<vector<int>> edges_in_component(num_components);
     for (int id = 0; id < edges.size(); id++) {
@@ -201,13 +264,19 @@ int main() {
     
     // Odstranenie ciest ktore niesu mostami a zaroven v inych komponentoch aby nedoslo k rozbitiu komponentov
     vector<int> removed;
+    int removed_count = 0;
     std::vector<std::pair<int, int>> edges_final;
-    for (int c = 0; c < num_components-1; c++) {
+    for (int c = 0; c < num_components; c++) {
+        if (removed_count >= (num_components - 1)) {
+            break;
+        }
         for (int id : edges_in_component[c]) {
             if (bridges[id] == 0) {
                 removed.push_back(id);
+                removed_count++;
                 break;
             }
+
         }
     }
     cout << "Navrhovane odstranenie hrany: \n";
