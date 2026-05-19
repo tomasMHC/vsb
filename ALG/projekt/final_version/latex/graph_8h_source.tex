@@ -1,0 +1,32 @@
+\doxysection{graph.\+h}
+\hypertarget{graph_8h_source}{}\label{graph_8h_source}\mbox{\hyperlink{graph_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GRAPH\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GRAPH\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ std::vector<std::pair<int,int>>\ \mbox{\hyperlink{graph_8h_a71c65a3952665820fb8e6daf8d495fd7}{read\_lines}}(\textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ std::vector<std::vector<int>>\ \mbox{\hyperlink{graph_8h_a754881021c10d5dc2aae2872e7bf6e35}{make\_adj\_list}}(std::vector<std::pair<int,int>>\ \&edges);}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{graph_8h_a961244afba6a1d70535745b7f135232e}{print\_adj\_list}}(std::vector<std::vector<int>>\ \&adj);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{graph_8h_a6eb44f9f48d14503f5d5687a4431e8fc}{dfsRec}}(std::vector<std::vector<int>>\ \&adj,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<bool>\ \&visited,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ s,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<int>\ \&res);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ std::vector<int>\ \mbox{\hyperlink{graph_8h_ad17f89558ea19723de221dacae1c4c16}{dfs}}(std::vector<std::vector<int>>\ \&adj);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{graph_8h_a3ee6403369b1e82d881980bac2d760cd}{dfs\_comp}}(\textcolor{keywordtype}{int}\ v,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::vector<int>>\ \&adj,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<int>\ \&comp);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{graph_8h_aaab86ba1bdc14e134930cf8da1ede537}{components\_count}}(std::vector<std::vector<int>>\ \&adj);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

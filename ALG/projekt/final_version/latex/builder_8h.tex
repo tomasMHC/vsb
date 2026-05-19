@@ -1,0 +1,56 @@
+\doxysection{builder.\+h File Reference}
+\hypertarget{builder_8h}{}\label{builder_8h}\index{builder.h@{builder.h}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include "{}bridges.\+h"{}}\newline
+Include dependency graph for builder.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{builder_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{builder_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \mbox{\hyperlink{builder_8h_a75171d28bd121190dc2ad7aefbcf938d}{edges\+\_\+to\+\_\+create}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj)
+\begin{DoxyCompactList}\small\item\em Návrh hrán na pridanie medzi komponentami. Funkcia prejde všetky vrcholy a pre každý vrchol, ktorý patrí do komponenty {\ttfamily i}, nájde prvý vrchol, ktorý patrí do komponenty {\ttfamily i + 1}. Tieto dva vrcholy sa potom použijú na vytvorenie novej hrany, ktorá bude pridaná do zoznamu {\ttfamily edges\+\_\+new}. Tento proces sa opakuje pre všetky komponenty od 0 do {\ttfamily num\+\_\+components -\/ 1}, čím sa zabezpečí, že každá komponenta bude spojená s ďalšou komponentou. \end{DoxyCompactList}\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{builder_8h_a3ae7215c400616296e356c12470b3430}{find\+\_\+edges\+\_\+to\+\_\+remove}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges, size\+\_\+t num\+\_\+components\+\_\+original)
+\begin{DoxyCompactList}\small\item\em Cyklus prechádza hrany a zisťuje, či je hranu možné odstrániť (použiť na postavenie novej cesty) bez toho, aby sa zvýšil počet komponentov. Ak hrana nie je mostom, pridá sa do zoznamu {\ttfamily removed}, ktorý obsahuje indexy hrán, ktoré budeme ostraňovať. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{builder_8h_a75171d28bd121190dc2ad7aefbcf938d}\label{builder_8h_a75171d28bd121190dc2ad7aefbcf938d} 
+\index{builder.h@{builder.h}!edges\_to\_create@{edges\_to\_create}}
+\index{edges\_to\_create@{edges\_to\_create}!builder.h@{builder.h}}
+\doxysubsubsection{\texorpdfstring{edges\_to\_create()}{edges\_to\_create()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ edges\+\_\+to\+\_\+create (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+
+
+Návrh hrán na pridanie medzi komponentami. Funkcia prejde všetky vrcholy a pre každý vrchol, ktorý patrí do komponenty {\ttfamily i}, nájde prvý vrchol, ktorý patrí do komponenty {\ttfamily i + 1}. Tieto dva vrcholy sa potom použijú na vytvorenie novej hrany, ktorá bude pridaná do zoznamu {\ttfamily edges\+\_\+new}. Tento proces sa opakuje pre všetky komponenty od 0 do {\ttfamily num\+\_\+components -\/ 1}, čím sa zabezpečí, že každá komponenta bude spojená s ďalšou komponentou. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em comp,num\+\_\+components} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{builder_8h_a3ae7215c400616296e356c12470b3430}\label{builder_8h_a3ae7215c400616296e356c12470b3430} 
+\index{builder.h@{builder.h}!find\_edges\_to\_remove@{find\_edges\_to\_remove}}
+\index{find\_edges\_to\_remove@{find\_edges\_to\_remove}!builder.h@{builder.h}}
+\doxysubsubsection{\texorpdfstring{find\_edges\_to\_remove()}{find\_edges\_to\_remove()}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ find\+\_\+edges\+\_\+to\+\_\+remove (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges,  }\item[{size\+\_\+t}]{num\+\_\+components\+\_\+original }\end{DoxyParamCaption})}
+
+
+
+Cyklus prechádza hrany a zisťuje, či je hranu možné odstrániť (použiť na postavenie novej cesty) bez toho, aby sa zvýšil počet komponentov. Ak hrana nie je mostom, pridá sa do zoznamu {\ttfamily removed}, ktorý obsahuje indexy hrán, ktoré budeme ostraňovať. 
+

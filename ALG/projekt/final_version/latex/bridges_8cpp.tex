@@ -1,0 +1,64 @@
+\doxysection{bridges.\+cpp File Reference}
+\hypertarget{bridges_8cpp}{}\label{bridges_8cpp}\index{bridges.cpp@{bridges.cpp}}
+{\ttfamily \#include "{}bridges.\+h"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include "{}graph.\+h"{}}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+Include dependency graph for bridges.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bridges_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{bridges_8cpp_ac6f67ffe8d58155eaf313be80992fc48}{find\+\_\+bridges}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges)
+\begin{DoxyCompactList}\small\item\em Hľadanie mostov v grafe. Táto funkcia prejde všetky hrany grafu a v prípade, že odstránením danej hrany sa zvýši počet komponentov, ide o most. Mosty sú uložené v zozname {\ttfamily bridges}, kde hodnota 1 znamená, že hrana je mostom, a hodnota 0 znamená, že hrana nie je mostom. Funkcia vytvorí kópiu zoznamu hrán, aby mohla testovať odstránenie každej hrany bez ovplyvnenia pôvodného zoznamu. Počet komponentov sa porovnáva pred a po odstránení hrany, aby sa určil, či ide o most. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{bridges_8cpp_a2648dc561e057ac4d9ae2ee2d20ad568}{is\+Bridge}} (size\+\_\+t edge\+Index, std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges, std\+::vector$<$ int $>$ \&removed, int comp\+\_\+count\+\_\+original)
+\begin{DoxyCompactList}\small\item\em Skontroluje, ci je hrana mostom. Ak nie je -\/ je možné ju odstrániť bez zvýšenia počtu komponent a tým pádom ju môžeme použiť na opravu grafu. Funkcia vytvorí zoznam susedov bez testovanej hrany a bez už odstránených hrán, a potom spočíta počet komponentov. Porovnáva počet komponentov pred a po odstránení hrany, aby určila, či ide o most. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{bridges_8cpp_ac6f67ffe8d58155eaf313be80992fc48}\label{bridges_8cpp_ac6f67ffe8d58155eaf313be80992fc48} 
+\index{bridges.cpp@{bridges.cpp}!find\_bridges@{find\_bridges}}
+\index{find\_bridges@{find\_bridges}!bridges.cpp@{bridges.cpp}}
+\doxysubsubsection{\texorpdfstring{find\_bridges()}{find\_bridges()}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ find\+\_\+bridges (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges }\end{DoxyParamCaption})}
+
+
+
+Hľadanie mostov v grafe. Táto funkcia prejde všetky hrany grafu a v prípade, že odstránením danej hrany sa zvýši počet komponentov, ide o most. Mosty sú uložené v zozname {\ttfamily bridges}, kde hodnota 1 znamená, že hrana je mostom, a hodnota 0 znamená, že hrana nie je mostom. Funkcia vytvorí kópiu zoznamu hrán, aby mohla testovať odstránenie každej hrany bez ovplyvnenia pôvodného zoznamu. Počet komponentov sa porovnáva pred a po odstránení hrany, aby sa určil, či ide o most. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edges} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$int$>$ 
+\end{DoxyReturn}
+\Hypertarget{bridges_8cpp_a2648dc561e057ac4d9ae2ee2d20ad568}\label{bridges_8cpp_a2648dc561e057ac4d9ae2ee2d20ad568} 
+\index{bridges.cpp@{bridges.cpp}!isBridge@{isBridge}}
+\index{isBridge@{isBridge}!bridges.cpp@{bridges.cpp}}
+\doxysubsubsection{\texorpdfstring{isBridge()}{isBridge()}}
+{\footnotesize\ttfamily bool is\+Bridge (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{edge\+Index,  }\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges,  }\item[{std\+::vector$<$ int $>$ \&}]{removed,  }\item[{int}]{comp\+\_\+count\+\_\+original }\end{DoxyParamCaption})}
+
+
+
+Skontroluje, ci je hrana mostom. Ak nie je -\/ je možné ju odstrániť bez zvýšenia počtu komponent a tým pádom ju môžeme použiť na opravu grafu. Funkcia vytvorí zoznam susedov bez testovanej hrany a bez už odstránených hrán, a potom spočíta počet komponentov. Porovnáva počet komponentov pred a po odstránení hrany, aby určila, či ide o most. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edge\+Index} & index hrany, ktorú testujeme \\
+\hline
+{\em edges} & zoznam všetkých hrán \\
+\hline
+{\em removed} & zoznam indexov odstráneneých hrán (kandidátov na opravu) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true ak je hrana mostom, false ak není mostom 
+\end{DoxyReturn}

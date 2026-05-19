@@ -1,0 +1,183 @@
+Nazov suboru: RoadSystem1.txt
+Edges list: 
+0 1
+1 3
+3 2
+2 0
+4 5
+5 6
+6 7
+8 10
+10 11
+11 12
+12 8
+9 12
+12 10
+Adjacency list:
+0: 1 2 
+1: 0 3 
+2: 3 0 
+3: 1 2 
+4: 5 
+5: 4 6 
+6: 5 7 
+7: 6 
+8: 10 12 
+9: 12 
+10: 8 11 12 
+11: 10 12 
+12: 11 8 9 10 
+Pocet komponent: 3
+0 1 3 2 4 5 6 7 8 10 11 12 9 
+-*-*- Mosty -*-*- 
+Je 0-1 most?: 0 ; 
+Je 1-3 most?: 0 ; 
+Je 3-2 most?: 0 ; 
+Je 2-0 most?: 0 ; 
+Je 4-5 most?: 1 ; 
+Je 5-6 most?: 1 ; 
+Je 6-7 most?: 1 ; 
+Je 8-10 most?: 0 ; 
+Je 10-11 most?: 0 ; 
+Je 11-12 most?: 0 ; 
+Je 12-8 most?: 0 ; 
+Je 9-12 most?: 1 ; 
+Je 12-10 most?: 0 ; 
+Je mozna oprava
+*-*-* Komponenty *-*-*
+Komponenta 0: 0 1 2 3 
+Komponenta 1: 4 5 6 7 
+Komponenta 2: 8 9 10 11 12 
+Hrana 0-1 neni mostom.
+Hrana 1-3 je mostom.
+Hrana 3-2 je mostom.
+Navrhovane odstranenie hrany: 
+0 1
+Navrhovane pridanie hrany: 
+0 4
+4 8
+Pocet komponent po navrhovanej oprave: 1
+Nazov suboru: RoadSystem2.txt
+Edges list: 
+0 1
+0 2
+0 3
+1 2
+2 3
+4 5
+5 6
+7 8
+8 9
+9 7
+Adjacency list:
+0: 1 2 3 
+1: 0 2 
+2: 0 1 3 
+3: 0 2 
+4: 5 
+5: 4 6 
+6: 5 
+7: 8 9 
+8: 7 9 
+9: 8 7 
+Pocet komponent: 3
+0 1 2 3 4 5 6 7 8 9 
+-*-*- Mosty -*-*- 
+Je 0-1 most?: 0 ; 
+Je 0-2 most?: 0 ; 
+Je 0-3 most?: 0 ; 
+Je 1-2 most?: 0 ; 
+Je 2-3 most?: 0 ; 
+Je 4-5 most?: 1 ; 
+Je 5-6 most?: 1 ; 
+Je 7-8 most?: 0 ; 
+Je 8-9 most?: 0 ; 
+Je 9-7 most?: 0 ; 
+Je mozna oprava
+*-*-* Komponenty *-*-*
+Komponenta 0: 0 1 2 3 
+Komponenta 1: 4 5 6 
+Komponenta 2: 7 8 9 
+Hrana 0-1 neni mostom.
+Hrana 0-2 neni mostom.
+Navrhovane odstranenie hrany: 
+0 1
+0 2
+Navrhovane pridanie hrany: 
+0 4
+4 7
+Pocet komponent po navrhovanej oprave: 1
+Nazov suboru: RoadSystem3.txt
+Edges list: 
+0 1
+1 2
+3 4
+Adjacency list:
+0: 1 
+1: 0 2 
+2: 1 
+3: 4 
+4: 3 
+Pocet komponent: 2
+0 1 2 3 4 
+-*-*- Mosty -*-*- 
+Je 0-1 most?: 1 ; 
+Je 1-2 most?: 1 ; 
+Je 3-4 most?: 1 ; 
+Vsetky hrany su mostami, neni mozna oprava.
+Nazov suboru: RoadSystem4.txt
+Edges list: 
+0 1
+1 2
+2 3
+3 4
+4 0
+0 2
+Adjacency list:
+0: 1 4 2 
+1: 0 2 
+2: 1 3 0 
+3: 2 4 
+4: 3 0 
+Pocet komponent: 1
+Graf je uz spojity, neni potreba zadne opravy.
+Nazov suboru: RoadSystem5.txt
+Edges list: 
+0 1
+1 2
+2 3
+3 0
+4 5
+5 6
+6 7
+7 4
+Adjacency list:
+0: 1 3 
+1: 0 2 
+2: 1 3 
+3: 2 0 
+4: 5 7 
+5: 4 6 
+6: 5 7 
+7: 6 4 
+Pocet komponent: 2
+0 1 2 3 4 5 6 7 
+-*-*- Mosty -*-*- 
+Je 0-1 most?: 0 ; 
+Je 1-2 most?: 0 ; 
+Je 2-3 most?: 0 ; 
+Je 3-0 most?: 0 ; 
+Je 4-5 most?: 0 ; 
+Je 5-6 most?: 0 ; 
+Je 6-7 most?: 0 ; 
+Je 7-4 most?: 0 ; 
+Je mozna oprava
+*-*-* Komponenty *-*-*
+Komponenta 0: 0 1 2 3 
+Komponenta 1: 4 5 6 7 
+Hrana 0-1 neni mostom.
+Navrhovane odstranenie hrany: 
+0 1
+Navrhovane pridanie hrany: 
+0 4
+Pocet komponent po navrhovanej oprave: 1

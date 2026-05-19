@@ -1,0 +1,107 @@
+\doxysection{graph.\+h File Reference}
+\hypertarget{graph_8h}{}\label{graph_8h}\index{graph.h@{graph.h}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+Include dependency graph for graph.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=253pt]{graph_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{graph_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \mbox{\hyperlink{graph_8h_a71c65a3952665820fb8e6daf8d495fd7}{read\+\_\+lines}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{graph_8h_a754881021c10d5dc2aae2872e7bf6e35}{make\+\_\+adj\+\_\+list}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges)
+\begin{DoxyCompactList}\small\item\em Vytvorenie zoznamu susedov zo zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{graph_8h_a961244afba6a1d70535745b7f135232e}{print\+\_\+adj\+\_\+list}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj)
+\item 
+void \mbox{\hyperlink{graph_8h_a6eb44f9f48d14503f5d5687a4431e8fc}{dfs\+Rec}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj, std\+::vector$<$ bool $>$ \&visited, int s, std\+::vector$<$ int $>$ \&res)
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{graph_8h_ad17f89558ea19723de221dacae1c4c16}{dfs}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj)
+\item 
+void \mbox{\hyperlink{graph_8h_a3ee6403369b1e82d881980bac2d760cd}{dfs\+\_\+comp}} (int v, int c, std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj, std\+::vector$<$ int $>$ \&comp)
+\item 
+int \mbox{\hyperlink{graph_8h_aaab86ba1bdc14e134930cf8da1ede537}{components\+\_\+count}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{graph_8h_aaab86ba1bdc14e134930cf8da1ede537}\label{graph_8h_aaab86ba1bdc14e134930cf8da1ede537} 
+\index{graph.h@{graph.h}!components\_count@{components\_count}}
+\index{components\_count@{components\_count}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{components\_count()}{components\_count()}}
+{\footnotesize\ttfamily int components\+\_\+count (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8h_ad17f89558ea19723de221dacae1c4c16}\label{graph_8h_ad17f89558ea19723de221dacae1c4c16} 
+\index{graph.h@{graph.h}!dfs@{dfs}}
+\index{dfs@{dfs}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{dfs()}{dfs()}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ dfs (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8h_a3ee6403369b1e82d881980bac2d760cd}\label{graph_8h_a3ee6403369b1e82d881980bac2d760cd} 
+\index{graph.h@{graph.h}!dfs\_comp@{dfs\_comp}}
+\index{dfs\_comp@{dfs\_comp}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{dfs\_comp()}{dfs\_comp()}}
+{\footnotesize\ttfamily void dfs\+\_\+comp (\begin{DoxyParamCaption}\item[{int}]{v,  }\item[{int}]{c,  }\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj,  }\item[{std\+::vector$<$ int $>$ \&}]{comp }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8h_a6eb44f9f48d14503f5d5687a4431e8fc}\label{graph_8h_a6eb44f9f48d14503f5d5687a4431e8fc} 
+\index{graph.h@{graph.h}!dfsRec@{dfsRec}}
+\index{dfsRec@{dfsRec}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{dfsRec()}{dfsRec()}}
+{\footnotesize\ttfamily void dfs\+Rec (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj,  }\item[{std\+::vector$<$ bool $>$ \&}]{visited,  }\item[{int}]{s,  }\item[{std\+::vector$<$ int $>$ \&}]{res }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8h_a754881021c10d5dc2aae2872e7bf6e35}\label{graph_8h_a754881021c10d5dc2aae2872e7bf6e35} 
+\index{graph.h@{graph.h}!make\_adj\_list@{make\_adj\_list}}
+\index{make\_adj\_list@{make\_adj\_list}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{make\_adj\_list()}{make\_adj\_list()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::vector$<$ int $>$ $>$ make\+\_\+adj\+\_\+list (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges }\end{DoxyParamCaption})}
+
+
+
+Vytvorenie zoznamu susedov zo zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edges} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::vector$<$int$>$$>$ 
+\end{DoxyReturn}
+\Hypertarget{graph_8h_a961244afba6a1d70535745b7f135232e}\label{graph_8h_a961244afba6a1d70535745b7f135232e} 
+\index{graph.h@{graph.h}!print\_adj\_list@{print\_adj\_list}}
+\index{print\_adj\_list@{print\_adj\_list}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{print\_adj\_list()}{print\_adj\_list()}}
+{\footnotesize\ttfamily void print\+\_\+adj\+\_\+list (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8h_a71c65a3952665820fb8e6daf8d495fd7}\label{graph_8h_a71c65a3952665820fb8e6daf8d495fd7} 
+\index{graph.h@{graph.h}!read\_lines@{read\_lines}}
+\index{read\_lines@{read\_lines}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{read\_lines()}{read\_lines()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ read\+\_\+lines (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$pair$<$int,int$>$$>$ 
+\end{DoxyReturn}

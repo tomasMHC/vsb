@@ -11,22 +11,19 @@ using namespace std;
 #include "bridges.h"
 #include "builder.h"
 
-/**
- * @file alg_projekt_tp.cpp
- * @brief Dokumentácia k projektu ALG – spracovanie grafu, DFS, komponenty, mosty.
- */
+int main(int argc, char *argv[]) {
 
- /**
- * @brief Hlavná funkcia programu. Táto funkcia načíta hrany z textového súboru, vytvorí zoznam susedov, vypíše zoznam hrán a zoznam susedov, spočíta počet komponentov, nájde mosty, navrhne odstránenie niektorých hrán a pridanie nových hrán medzi komponentami, a nakoniec vypíše počet komponentov po navrhovanej oprave.
- */
+    if (argc != 2) {
+        cout << "Pouzitie: " << argv[0] << " <nazov_suboru>\n";
+        return 1;
+    }
 
-int main() {
     std::vector<std::pair<int,int>> edges;
     int number_of_edges = 0;
     std::vector<std::vector<int>> adj;
     
     // načítanie hrán
-    std::string filename = "RoadSystem5.txt";
+    std::string filename = argv[1];
     edges = read_lines(filename);
     cout << "Nazov suboru: " << filename << endl;
     adj = make_adj_list(edges);
@@ -43,16 +40,10 @@ int main() {
     }
     // Vypis adjacency listu
     cout << "Adjacency list:\n";
-    for (int i = 0; i < adj.size(); i++) {
-        cout << i << ": ";
-        for (int to : adj[i]) {
-            cout << to << " ";
-        }
-        cout << "\n";
-    }
+    print_adj_list(adj);
 
     // Počet komponent    
-    int num_components = components_count(adj);
+    size_t num_components = components_count(adj);
     cout << "Pocet komponent: " << num_components << endl;
     if (num_components == 1) {
         cout << "Graf je uz spojity, neni potreba zadne opravy.\n";
@@ -60,9 +51,9 @@ int main() {
     }
 
 // // Hľadanie mostov 
-//     vector<int> bridges = find_bridges(edges);
+//     std::vector<int> bridges = find_bridges(edges);
 //     cout << "-*-*- Mosty -*-*- " << endl;
-//     int i = 0;
+//     size_t i = 0;
 //     // for (int bridge : bridges) {
 //     //     cout << "Je "<< edges[i].first << "-" << edges[i].second << " most?: " << bridge << " "  << "; " << endl;
 //     //     i++;
@@ -86,7 +77,14 @@ int main() {
     //     cout << "\n";
     // }
 
-    vector<int> to_remove = find_edges_to_remove(edges, num_components);
+    std::vector<int> to_remove = find_edges_to_remove(edges, num_components);
+    if (to_remove.size() < (num_components - 1)) {
+        cout << "Vsetky hrany su mostami alebo nie je možné odstrániť dostatok ciest --> neni mozna oprava !!\n";
+        return 0;
+    }
+    else {
+        cout << "Je mozna oprava...\n";
+    }
 
     cout << "Navrhovane odstranenie hrany: \n";
     for (int id : to_remove) {
@@ -102,7 +100,7 @@ int main() {
 
     // Vytvorenie finálneho zoznamu hrán po navrhovanej oprave
     std::vector<std::pair<int, int>> edges_final;
-    for (int id = 0; id < edges.size(); ++id) {
+    for (size_t id = 0; id < edges.size(); ++id) {
         if (std::find(to_remove.begin(), to_remove.end(), id) == to_remove.end()) {
             edges_final.push_back(edges[id]); // ponechané hrany
         }
@@ -113,7 +111,6 @@ int main() {
     
     std::vector<std::vector<int>> adj_final = make_adj_list(edges_final);
     cout << "Pocet komponent po navrhovanej oprave: " << components_count(adj_final) << "\n";
-
 
     return 0;
 }

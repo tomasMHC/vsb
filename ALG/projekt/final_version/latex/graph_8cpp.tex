@@ -1,0 +1,154 @@
+\doxysection{graph.\+cpp File Reference}
+\hypertarget{graph_8cpp}{}\label{graph_8cpp}\index{graph.cpp@{graph.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for graph.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=346pt]{graph_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ pair$<$ int, int $>$ $>$ \mbox{\hyperlink{graph_8cpp_a5e047988a90e0f730859b9911a9ce7c5}{read\+\_\+lines}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{graph_8cpp_a7917996444f25674888909de25d6b07f}{dfs\+Rec}} (vector$<$ vector$<$ int $>$ $>$ \&adj, vector$<$ bool $>$ \&visited, int s, vector$<$ int $>$ \&res)
+\begin{DoxyCompactList}\small\item\em Rekurzívna funkcia pre prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily s}, a pridá ich do výsledného zoznamu {\ttfamily res}. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \mbox{\hyperlink{graph_8cpp_a60ce384892a0d6715e4dbb15025fa653}{dfs}} (vector$<$ vector$<$ int $>$ $>$ \&adj)
+\begin{DoxyCompactList}\small\item\em Prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol. Výsledkom je zoznam všetkých vrcholov v poradí, v akom boli navštívené. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{graph_8cpp_a44a753d9e60195c46feb1a709c386bfb}{dfs\+\_\+comp}} (int v, int c, vector$<$ vector$<$ int $>$ $>$ \&adj, vector$<$ int $>$ \&comp)
+\begin{DoxyCompactList}\small\item\em DFS funkcia na priradenie čísla komponenty každému vrcholu. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{graph_8cpp_a754881021c10d5dc2aae2872e7bf6e35}{make\+\_\+adj\+\_\+list}} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&edges)
+\begin{DoxyCompactList}\small\item\em Vytvorenie zoznamu susedov zo zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{graph_8cpp_a961244afba6a1d70535745b7f135232e}{print\+\_\+adj\+\_\+list}} (std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&adj)
+\item 
+int \mbox{\hyperlink{graph_8cpp_a6f863a653693143360d25d7ebaf15a99}{components\+\_\+count}} (vector$<$ vector$<$ int $>$ $>$ \&adj)
+\begin{DoxyCompactList}\small\item\em Spočítanie počtu komponentov grafu. Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol, aby označila všetky vrcholy v tej istej komponente ako navštívené. Počet komponentov sa zvyšuje o 1 vždy, keď sa nájde nový nenavštívený vrchol. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{graph_8cpp_a6f863a653693143360d25d7ebaf15a99}\label{graph_8cpp_a6f863a653693143360d25d7ebaf15a99} 
+\index{graph.cpp@{graph.cpp}!components\_count@{components\_count}}
+\index{components\_count@{components\_count}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{components\_count()}{components\_count()}}
+{\footnotesize\ttfamily int components\+\_\+count (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+
+
+Spočítanie počtu komponentov grafu. Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol, aby označila všetky vrcholy v tej istej komponente ako navštívené. Počet komponentov sa zvyšuje o 1 vždy, keď sa nájde nový nenavštívený vrchol. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\Hypertarget{graph_8cpp_a60ce384892a0d6715e4dbb15025fa653}\label{graph_8cpp_a60ce384892a0d6715e4dbb15025fa653} 
+\index{graph.cpp@{graph.cpp}!dfs@{dfs}}
+\index{dfs@{dfs}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{dfs()}{dfs()}}
+{\footnotesize\ttfamily vector$<$ int $>$ dfs (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+
+
+Prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia prejde všetky vrcholy grafu a v prípade, že narazí na neobídaný vrchol, spustí rekurzívnu funkciu {\ttfamily dfs\+Rec} na tento vrchol. Výsledkom je zoznam všetkých vrcholov v poradí, v akom boli navštívené. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector$<$int$>$ 
+\end{DoxyReturn}
+\Hypertarget{graph_8cpp_a44a753d9e60195c46feb1a709c386bfb}\label{graph_8cpp_a44a753d9e60195c46feb1a709c386bfb} 
+\index{graph.cpp@{graph.cpp}!dfs\_comp@{dfs\_comp}}
+\index{dfs\_comp@{dfs\_comp}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{dfs\_comp()}{dfs\_comp()}}
+{\footnotesize\ttfamily void dfs\+\_\+comp (\begin{DoxyParamCaption}\item[{int}]{v,  }\item[{int}]{c,  }\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj,  }\item[{vector$<$ int $>$ \&}]{comp }\end{DoxyParamCaption})}
+
+
+
+DFS funkcia na priradenie čísla komponenty každému vrcholu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & vrchol, ktorému priradíme číslo komponenty \\
+\hline
+{\em c} & číslo komponenty \\
+\hline
+{\em adj} & zoznam susedov \\
+\hline
+{\em comp} & zoznam komponentov, kde index reprezentuje vrchol a hodnota reprezentuje číslo komponenty, do které vrchol patri \\
+\hline
+\end{DoxyParams}
+\Hypertarget{graph_8cpp_a7917996444f25674888909de25d6b07f}\label{graph_8cpp_a7917996444f25674888909de25d6b07f} 
+\index{graph.cpp@{graph.cpp}!dfsRec@{dfsRec}}
+\index{dfsRec@{dfsRec}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{dfsRec()}{dfsRec()}}
+{\footnotesize\ttfamily void dfs\+Rec (\begin{DoxyParamCaption}\item[{vector$<$ vector$<$ int $>$ $>$ \&}]{adj,  }\item[{vector$<$ bool $>$ \&}]{visited,  }\item[{int}]{s,  }\item[{vector$<$ int $>$ \&}]{res }\end{DoxyParamCaption})}
+
+
+
+Rekurzívna funkcia pre prechod grafu metodou DFS (Depth-\/\+First Search). Táto funkcia navštívi všetky vrcholy, ktoré sú dosiahnuteľné z daného vrcholu {\ttfamily s}, a pridá ich do výsledného zoznamu {\ttfamily res}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em adj} & \\
+\hline
+{\em visited} & \\
+\hline
+{\em s} & \\
+\hline
+{\em res} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{graph_8cpp_a754881021c10d5dc2aae2872e7bf6e35}\label{graph_8cpp_a754881021c10d5dc2aae2872e7bf6e35} 
+\index{graph.cpp@{graph.cpp}!make\_adj\_list@{make\_adj\_list}}
+\index{make\_adj\_list@{make\_adj\_list}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{make\_adj\_list()}{make\_adj\_list()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::vector$<$ int $>$ $>$ make\+\_\+adj\+\_\+list (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{edges }\end{DoxyParamCaption})}
+
+
+
+Vytvorenie zoznamu susedov zo zoznamu hrán. Táto funkcia najprv zistí maximálny vrchol v zozname hrán, aby vedela, koľko vrcholov má graf. Potom vytvorí prázdny zoznam susedov pre každý vrchol a naplní ho na základe hrán. Každá hrana pridá suseda do zoznamu susedov pre oba vrcholy, ktoré spája. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em edges} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::vector$<$int$>$$>$ 
+\end{DoxyReturn}
+\Hypertarget{graph_8cpp_a961244afba6a1d70535745b7f135232e}\label{graph_8cpp_a961244afba6a1d70535745b7f135232e} 
+\index{graph.cpp@{graph.cpp}!print\_adj\_list@{print\_adj\_list}}
+\index{print\_adj\_list@{print\_adj\_list}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_adj\_list()}{print\_adj\_list()}}
+{\footnotesize\ttfamily void print\+\_\+adj\+\_\+list (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::vector$<$ int $>$ $>$ \&}]{adj }\end{DoxyParamCaption})}
+
+\Hypertarget{graph_8cpp_a5e047988a90e0f730859b9911a9ce7c5}\label{graph_8cpp_a5e047988a90e0f730859b9911a9ce7c5} 
+\index{graph.cpp@{graph.cpp}!read\_lines@{read\_lines}}
+\index{read\_lines@{read\_lines}!graph.cpp@{graph.cpp}}
+\doxysubsubsection{\texorpdfstring{read\_lines()}{read\_lines()}}
+{\footnotesize\ttfamily std\+::vector$<$ pair$<$ int, int $>$ $>$ read\+\_\+lines (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+
+
+Načítanie hrán z textového súboru, kde každá řádka obsahuje dvě čísla reprezentující hranu mezi dvěma vrcholy. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$pair$<$int,int$>$$>$ 
+\end{DoxyReturn}
