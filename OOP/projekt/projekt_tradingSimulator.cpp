@@ -76,9 +76,7 @@ Option::Option(string n, double p, Stock* underlying) {
     this->name = n;
     this->price = p;
 }
-Option::~Option() {
-    // No dynamic memory to clean up in this base class
-}
+Option::~Option() {}
 
 class OptionCall: public Option {
     public:

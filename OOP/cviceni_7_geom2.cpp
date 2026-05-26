@@ -4,7 +4,8 @@
 #include <cmath>
 using namespace std;
 
-class Figure {
+
+class Figure {          // Uz splnuje aj zadanie ukolu v oop_08.pdf
     public:
         virtual double Obsah() const = 0;
         virtual double Obvod() const = 0;
