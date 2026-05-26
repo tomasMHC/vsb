@@ -27,10 +27,10 @@ string Client::getName() {
 class Account {
     private:
         int number;
-        double balance;
         double interestRate;
-
         static double defaultIR;
+    protected:
+        double balance;
 
         Client* owner;
         Client* partner;
@@ -46,11 +46,11 @@ class Account {
         double getInterestRate();
         Client *getOwner();
         Client *getPartner();
-        bool canWithdraw(double a);
-
+        
         void Deposit(double a);
         bool Withdraw(double a);
         void AddInterest();
+        bool canWithdraw(double a);
 };
 
 Account::Account(int n, Client *c) {
@@ -125,6 +125,36 @@ double Account::getDefaultIR() {
 }
 
 
+class CreditAccount : public Account {
+    private: 
+        double credit;
+    public:
+        CreditAccount(int n, Client *o, double c);
+        CreditAccount(int n, Client *o, double ir, double c);
+        bool canWithdraw(double a);
+        bool Withdraw(double a);
+};
+
+bool CreditAccount::canWithdraw(double a){
+    return (this->getBalance() + this->credit >= a);
+}
+
+CreditAccount::CreditAccount(int n, Client *o, double c) : Account(n, o) {
+    this->credit=c;
+}
+CreditAccount::CreditAccount(int n, Client *o, double ir, double c) : Account(n, o, ir) {
+    this->credit=c;
+}
+bool CreditAccount::Withdraw(double a) {
+    bool success = false;
+    if (this->canWithdraw(a)) {
+        this->balance -= a;
+        success = true;
+    }
+    return success;
+}
+
+
 class PartnerAccount : public Account {
     private:
         Client* partner;
@@ -145,66 +175,66 @@ Client* PartnerAccount::getPartner() {
 }
 
 
-class Bank {
-    private:
-        Client** clients;
-        int clientsCount;
-        Account** accounts;
-        int accountsCount;
-    public:
-        Bank(int c, int a);
-        ~Bank();
+// class Bank {
+//     private:
+//         Client** clients;
+//         int clientsCount;
+//         Account** accounts;
+//         int accountsCount;
+//     public:
+//         Bank(int c, int a);
+//         ~Bank();
 
-        Client* getClient(int c);
-        Account* getAccount(int a);
+//         Client* getClient(int c);
+//         Account* getAccount(int a);
         
-        Client* createClient(int c, string n);
-        Account* createAccount(int n, Client* c);
-        Account* createAccount(int n, Client *c, double ir);
-        Account* createAccount(int n, Client *c, Client *p);
-        Account* createAccount(int n, Client *c, Client *p, double ir);
-        int getClientsCount();
+//         Client* createClient(int c, string n);
+//         Account* createAccount(int n, Client* c);
+//         Account* createAccount(int n, Client *c, double ir);
+//         Account* createAccount(int n, Client *c, Client *p);
+//         Account* createAccount(int n, Client *c, Client *p, double ir);
+//         int getClientsCount();
         
-        void addInterest();
-};
+//         void addInterest();
+// };
 
-Bank::Bank(int c, int a) {
-    clients = new Client*[c];
-    accounts = new Account*[a];
-    clientsCount = 0;
-    accountsCount = 0;
-}
-Bank::~Bank() {
-    for (int i = 0; i < clientsCount; i++) delete clients[i];
-    delete[] clients;
+// Bank::Bank(int c, int a) {
+//     clients = new Client*[c];
+//     accounts = new Account*[a];
+//     clientsCount = 0;
+//     accountsCount = 0;
+// }
+// Bank::~Bank() {
+//     for (int i = 0; i < clientsCount; i++) delete clients[i];
+//     delete[] clients;
 
-    for (int i = 0; i < accountsCount; i++) delete accounts[i];
-    delete[] accounts;
-}
-Client* Bank::getClient(int c) {
-    return this->clients[c];
-}
-Account* Bank::getAccount(int a) {
-    return this->accounts[a];
-}
-Client* Bank::createClient(int c, string n) {
-    Client *newObject = new Client(c, n);
-    this->clients[this->clientsCount] = newObject;
-    this->clientsCount += 1;
-    return newObject;
-}
-Account* Bank::createAccount(int n, Client *c) {
-    Account *newObject = new Account(n, c);
-    this->accounts[this->accountsCount] = newObject;
-    this->accountsCount += 1;
-    return newObject;
-}
-Account* Bank::createAccount(int n, Client *c, double ir) {
-    Account *newObject = new Account(n, c, ir);
-    this->accounts[this->accountsCount] = newObject;
-    this->accountsCount += 1;
-    return newObject;
-}
+//     for (int i = 0; i < accountsCount; i++) delete accounts[i];
+//     delete[] accounts;
+// }
+// Client* Bank::getClient(int c) {
+//     return this->clients[c];
+// }
+// Account* Bank::getAccount(int a) {
+//     return this->accounts[a];
+// }
+// Client* Bank::createClient(int c, string n) {
+//     Client *newObject = new Client(c, n);
+//     this->clients[this->clientsCount] = newObject;
+//     this->clientsCount += 1;
+//     return newObject;
+// }
+// Account* Bank::createAccount(int n, Client *c) {
+//     Account *newObject = new Account(n, c);
+//     this->accounts[this->accountsCount] = newObject;
+//     this->accountsCount += 1;
+//     return newObject;
+// }
+// Account* Bank::createAccount(int n, Client *c, double ir) {
+//     Account *newObject = new Account(n, c, ir);
+//     this->accounts[this->accountsCount] = newObject;
+//     this->accountsCount += 1;
+//     return newObject;
+// }
 // Account* Bank::createAccount(int n, Client *c, Client *p) {
 //     Account *newObject = new Account(n, c, p);
 //     this->accounts[this->accountsCount] = newObject;
@@ -217,47 +247,29 @@ Account* Bank::createAccount(int n, Client *c, double ir) {
 //     this->accountsCount += 1;
 //     return newObject;
 // }
-void Bank::addInterest() {
-    for (int i = 0; i < accountsCount; i++) accounts[i]->AddInterest();
-}
+// void Bank::addInterest() {
+//     for (int i = 0; i < accountsCount; i++) accounts[i]->AddInterest();
+// }
 
-int Bank::getClientsCount() {
-    return clientsCount;
-}
+// int Bank::getClientsCount() {
+//     return clientsCount;
+// }
 
 int main() {
-    // Bank *bank = new Bank(10, 10);
-    // Account::setDefaultIR(0.02);
 
-    // Client *client1 = bank->createClient(1, "Tomas");
-    // Account *account1 = bank->createAccount(1, client1, 0.05);
-    // account1->Deposit(1000);
-    // cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
-    
-    // cout << "Clients count: " << bank->getClientsCount() << endl;
+    // Cviceni 6: dedicnost - prekryti
+    Client *o = new Client(0, "Tomas");
+    CreditAccount *ca = new CreditAccount(1, o, 1000);
+    cout << ca->canWithdraw(1000) << endl;
 
-    // Client *client2 = bank->createClient(2, "Jana");
-    // Account *account2 = bank->createAccount(2, client2, client1);
-    // account2->Deposit(2000);
-    // cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
+    Account *a = ca;                    // polymorfne prirazeni
+    cout << a->canWithdraw(1000) << endl;
 
-    // // Pridani uctu
-    // cout << "Clients count: " << bank->getClientsCount() << endl;
-    
-    // // Pridani uroku
-    // bank->addInterest();
-    // cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
-    // cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
+    cout << ca -> canWithdraw(1000) << endl;
 
-    // Cviceni 5: dedicnost
-    Account *a;
-    PartnerAccount *pa;
-    pa = new PartnerAccount(0, new Client(0, "Smith"), new Client(1, "Jones"));
-    a = pa;
-    cout << a->getOwner()->getName() << endl;
+    a=nullptr;
+    delete ca;
 
-    cout << pa->getOwner()->getName() << endl;
-    cout << pa->getPartner()->getName() << endl;
     getchar();
 
     // delete bank;
