@@ -30,6 +30,8 @@ class Account {
         double balance;
         double interestRate;
 
+        static double defaultIR;
+
         Client* owner;
         Client* partner;
     public:
@@ -37,6 +39,9 @@ class Account {
         Account(int n, Client *c, double ir);
         Account(int n, Client *c, Client *p);
         Account(int n, Client *c, Client *p, double ir);
+
+        static void setDefaultIR(double defaultIR);
+        static double getDefaultIR();
 
         int getNumber();
         double getBalance();
@@ -55,7 +60,7 @@ Account::Account(int n, Client *c) {
     this->owner = c;
     this->partner = nullptr;
     this->balance = 0;
-    this->interestRate = 0.01;
+    this->interestRate = defaultIR;
 }
 Account::Account(int n, Client *c, double ir) {
     this->number = n;
@@ -69,7 +74,8 @@ Account::Account(int n, Client *c, Client *p) {
     this->owner = c;
     this->partner = p;
     this->balance = 0;
-    this->interestRate = 0.01;
+    this->interestRate = defaultIR;
+
 }
 Account::Account(int n, Client *c, Client *p, double ir) {
     this->number = n;
@@ -110,6 +116,15 @@ void Account::AddInterest() {
     this->balance += this->balance * this->interestRate;
 }
 
+double Account::defaultIR = 0.01;   // default pre všetky účty
+
+void Account::setDefaultIR(double ir) {
+    defaultIR = ir;
+}
+
+double Account::getDefaultIR() {
+    return defaultIR;
+}
 
 class Bank {
     private:
@@ -193,21 +208,27 @@ int Bank::getClientsCount() {
 
 int main() {
     Bank *bank = new Bank(10, 10);
+    Account::setDefaultIR(0.02);
+
     Client *client1 = bank->createClient(1, "Tomas");
     Account *account1 = bank->createAccount(1, client1, 0.05);
     account1->Deposit(1000);
-    bank->addInterest();
-    cout << account1->getBalance() << endl;
-    cout << bank->getClientsCount() << endl;
+    cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
+    
+    cout << "Clients count: " << bank->getClientsCount() << endl;
 
     Client *client2 = bank->createClient(2, "Jana");
-    Account *account2 = bank->createAccount(2, client2, client1, 0.03);
+    Account *account2 = bank->createAccount(2, client2, client1);
     account2->Deposit(2000);
+    cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
 
-    cout << account1->getBalance() << endl;
-    cout << account2->getBalance() << endl;
-
-    cout << bank->getClientsCount() << endl;
+    // Pridani uctu
+    cout << "Clients count: " << bank->getClientsCount() << endl;
+    
+    // Pridani uroku
+    bank->addInterest();
+    cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
+    cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
 
     delete bank;
 

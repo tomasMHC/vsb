@@ -2,11 +2,10 @@
 #include <iomanip>
 
 #include <string>
-#include <format>
+// #include <format>
 #include <bits/stdc++.h>
 // #include "projekt_tradingSimulator.h"
 using namespace std;
-
 
 class Instrument {                                              // Trieda Instrument je abstraktná, pretože obsahuje čistě virtuální metody getType(), updatePrice() a calculateFee().
     protected:                                                  // Instrument má dve dedičné triedy - Stock a Option. Option má dve dedičné triedy - OptionCall a OptionPut.
@@ -21,8 +20,8 @@ class Instrument {                                              // Trieda Instru
         string getSymbol();
 
         virtual string getType() = 0;                       
-        virtual void updatePrice(double p) = 0;                 // abstraktne metody - musia být implementované v dědičných třídách
-        virtual double calculateFee() = 0;                  // pretizena metoda
+        virtual void updatePrice(double p) {this->price = p;};                 // abstraktne metody - musia být implementované v dědičných třídách
+        virtual double calculateFee() {return price * 0.1;};                  // pretizena metoda
 };
 string Instrument::getSymbol() {
     return this->symbol;
@@ -42,9 +41,7 @@ class Stock : public Instrument {
         Stock(string n, double p, double d);
         Stock(string n, double p);
         double getDividend();
-        void updatePrice(double p);
-        double calculateFee();
-        string getType();
+        string getType() {return "Stock";};
 };
 Stock::Stock(string n, double p, double d) {
     this->name = n;
@@ -57,15 +54,6 @@ Stock::Stock(string n, double p) {
 }
 double Stock::getDividend() {
     return this->dividend;
-}
-double Stock::calculateFee() {
-    return this->price * 0.01;
-}
-string Stock::getType() {
-    return "Stock";
-}
-void Stock::updatePrice(double p) {
-    this->price = p;
 }
 
 class Option: public Instrument {
@@ -81,9 +69,6 @@ class Option: public Instrument {
         virtual ~Option();
         virtual double getStrikePrice() = 0;
         virtual string getExpirationDate()  = 0;
-        virtual double calculateFee()  = 0;
-        virtual string getType() = 0;
-        virtual void updatePrice(double p) = 0;
         virtual double getStrike() = 0;
 };
 Option::Option(string n, double p, Stock* underlying) {
@@ -100,11 +85,11 @@ class OptionCall: public Option {
         OptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         double intrinsicValue();
          void updatePrice(double p);
-         string getType();
+         string getType() {return "OptionCall";};
          double getStrike();
          double getStrikePrice();
          string getExpirationDate();
-         double calculateFee();
+         double calculateFee() override {return price * 0.05;};
 };
 
 
@@ -115,15 +100,13 @@ OptionCall::OptionCall(string n, double p, string expDate, double strikePrice, S
     this->underlyingPrice = underlying->getPrice();
     this->expirationDate = expDate;
 }
-string OptionCall::getType() {
-    return "OptionCall";
-}
+// string OptionCall::getType() {
+//     return "OptionCall";
+// }
 double OptionCall::getStrike() {
     return this->strikePrice;
 }
-double OptionCall::calculateFee() {
-    return (price * 0.05);
-}
+
 double OptionCall::getStrikePrice() {
     return strikePrice;
 }
@@ -138,8 +121,7 @@ public:
 
     double intrinsicValue();
     void updatePrice(double p) override;
-    string getType() override;
-
+    string getType() override {return "OptionPut";};
     double getStrike() override { return strikePrice; }
     double getStrikePrice() override { return strikePrice; }
     string getExpirationDate() override { return expirationDate; }
@@ -153,9 +135,7 @@ OptionPut::OptionPut(string n, double p, string expDate, double strikePrice, Sto
     this->underlyingPrice = underlying->getPrice();
     this->expirationDate = expDate;
 }
-string OptionPut::getType() {
-    return "OptionPut";
-}
+
 double OptionCall::intrinsicValue() {
     return max(0.0, this->underlyingPrice - this->strikePrice);
 }
@@ -343,35 +323,6 @@ class Portfolio {
         return nullptr;
     }
 
-    // // Pridanie alebo aktualizácia pozície
-    // void Portfolio::applyOrder(Order* o) {
-    //     orders[ordersCount++] = o;
-
-    //     Position* pos = findPosition(o->getInstrument());
-
-    //     if (o->getType() == "Buy") {
-    //         if (pos == nullptr) {
-    //             positions[positionsCount++] = new Position(o->getInstrument(), o->getQuantity());
-    //         } else {
-    //             pos->addQuantity(o->getQuantity());
-                
-    //         }
-    //     this->cash = this->cash - o->getQuantity() * o->getPrice() - o->getInstrument()->calculateFee();  // Snížení hotovosti při nákupu
-    //     }
-    //     else if (o->getType() == "Sell") {
-    //         if (pos != nullptr) {
-    //             pos->reduceQuantity(o->getQuantity());
-    //             this->cash = this->cash + o->getQuantity() * o->getPrice() - o->getInstrument()->calculateFee();  // Zvýšení hotovosti při prodeji
-    //             if (pos->getQuantity() <= 0) {
-    //                 for (int i = 0; i <positionsCount; i++) {
-    //                     positions[i] = positions[i+1];
-    //                 }
-    //                 positionsCount--;
-    //             }
-    //         }
-    //     }
-    // }
-
     double Portfolio::getTotalValue() const {
         double total = cash;
         for (int i = 0; i < positionsCount; i++) {
@@ -403,35 +354,27 @@ class Portfolio {
     }
 
 
-
 class Client {             
     private:
-        int code;
         string name;
         Market** markets;
         int marketsCount;
         Portfolio* portfolio;
     public:
-        Client(int c, string n);
-        int getCode();
+        Client(string n);
+        ~Client() {delete portfolio; delete[] markets;};
         string getName();
         void addMarket(Market* m);
         Portfolio* getPortfolio() const;
         Order* buy(string i, int q, Market* m);
         Order* sell(string i, int q, Market* m);
-        // Order* buy(const string i, int q, double strikePrice, Market* m);
-        // Order* sell(const string i, int q, double strikePrice, Market* m );
     };
-    Client::Client(int c, string n) {          
-        this->code = c;
+    Client::Client(string n) {          
         this->name = n;
         this->markets = new Market*[10];  // Assuming a maximum of 10 markets
         this->marketsCount = 0;
         this->portfolio = new Portfolio(this);}
 
-    int Client::getCode() {
-        return this->code;
-    }
     string Client::getName() {
         return this->name;
     }
@@ -442,11 +385,9 @@ class Client {
         }
     }
 
-
     Portfolio* Client::getPortfolio() const {
         return this->portfolio;
     }
-
 
     void Portfolio::printPortfolio() const {
         cout << "----------------------------------------" << endl;
@@ -507,9 +448,10 @@ Market::Market(string n, int i, int t) {
 Market::~Market() {
     for (int i = 0; i < instrumentCount; i++) delete instruments[i];
     delete[] instruments;
-
+    
     for (int i = 0; i < tradersCount; i++) delete traders[i];
     delete[] traders;
+
 }
 string Market::getName() {
     return this->name;
@@ -553,49 +495,19 @@ Instrument* Market::addOptionPut(string n, double p, string expDate, double stri
 
 
 Client* Market::addTrader(string t) {
-    Client *newObject = new Client(tradersCount, t);
+    Client *newObject = new Client(t);
     this->traders[this->tradersCount] = newObject;
     this->tradersCount += 1;
     newObject->addMarket(this);
     return newObject;
 }
+
 Client** Market::getTraders() {
     return this->traders;
 }
 int Market::getTradersCount() {
     return this->tradersCount;
 }
-// Order* Market::addSell(const string& instrumentName, double q, double p, Client* c) {
-//     Instrument* inst = findInstrumentByName(instrumentName);
-//     if (!inst) {
-//         cout << "Instrument " << instrumentName << " not found!" << endl;
-//         return nullptr;
-//     }
-//     Order* o = new Sell(inst, q, p);
-//     c->getPortfolio()->applyOrder(o);
-//     cout << "Processing Sell order on market " << name
-//          << ": " << q << " of " << inst->getName()
-//          << " at price " << p << ", Fee: " << o->getInstrument()->calculateFee() * q << endl;
-//     return o;
-// }
-
-// Order* Market::addBuy(const string& instrumentName, double q, double p, Client* c) {
-//     Instrument* inst = findInstrumentByName(instrumentName);
-//     if (!inst) {
-//         cout << "Instrument " << instrumentName << " not found!" << endl;
-//         return nullptr;
-//     }
-//     Order* o = new Buy(inst, q, p);
-//     c->getPortfolio()->getOrders()[c->getPortfolio()->getOrdersCount()] = o;                                     // Uloží objednávku do portfolia klienta
-//     c->getPortfolio()->applyOrder(o);
-
-//     cout << "Processing Buy order on market " << name
-//          << ": " << q << " of " << inst->getName()
-//          << " at price " << p << ", Fee: " << o->getInstrument()->calculateFee() * q << endl;                   // Late binding - calculateFee() se volá pre konkrétny typ instrumentu (Stock, OptionCall, OptionPut)
-
-//     return o;
-// }
-
 
     Order* Client::buy(string i, int qty, Market* m) {
         Instrument* inst = m->findInstrumentByName(i);
@@ -660,41 +572,6 @@ int Market::getTradersCount() {
         return o;
     }
 
-
-    // Order* Client::buy(string i, int q, double strikePrice, Market* m) {
-    //     Instrument* inst = m->findInstrumentByName(i);
-    //     if (!inst) {
-    //         cout << "Instrument " << i << " not found!" << endl;
-    //         return nullptr;
-    //     }
-    //     Order* o = new Buy(inst, q, inst->getPrice());
-    //     this->portfolio->applyOrder(o);
-
-    //     cout << "Client " << this->name << " BUY " << q << " of " << i
-    //         << " at price " << inst->getPrice()
-    //         << ", Fee: " << inst->calculateFee() * q << endl;
-
-    //     return o;
-    //     }
-    // Order* Client::sell(string i, int q, double strikePrice, Market* m) {
-    //     Instrument* inst = m->findInstrumentByName(i);
-    //     if (!inst) {
-    //         cout << "Instrument " << i << " not found!" << endl;
-    //         return nullptr;
-    //     }
-    //     Order* o = new Sell(inst, q, inst->getPrice());
-    //     this->portfolio->applyOrder(o);
-
-    //     cout << "Client " << this->name << " BUY " << q << " of " << i
-    //         << " at price " << inst->getPrice()
-    //         << ", Fee: " << inst->calculateFee() * q << endl;
-
-    //     return o;
-    // }
-
-
-
-
 void Market::generateOptionsForStock(Stock* s) {
     double price = s->getPrice();
 
@@ -748,7 +625,6 @@ void Market::printOptions() {
     }
 }
 
-
 int main() {
     std::vector<string> tickers_US= {"AAPL", "GOOGL", "MSFT", "TSLA", "META"};
     std::vector<string> tickers_US_div = {"BRKB", "AMZN", "BA", "ZOOM", "KO"};
@@ -756,10 +632,10 @@ int main() {
     std::vector<double> prices_US = {150,280,300,140,350};
     
     Market* market1 = new Market("NASDAQ", 100, 10);
-
     Client* tomas = market1->addTrader("Tomas");
     Client* betka = market1->addTrader("Betka");
-    
+    cout << "Pocet obchodnikov: " << market1->getTradersCount() << endl;
+
     for (int i = 0; i < tickers_US.size(); i++) {                       // ukazka pretizenej metody addStock
         market1->addStock(tickers_US[i], prices_US[i]);
         market1->addStock(tickers_US_div[i], prices_US[i]*1.5, dividends[i]);
@@ -805,5 +681,6 @@ int main() {
     //     }
     // }
 
+    delete market1;
     return 0;
 }
