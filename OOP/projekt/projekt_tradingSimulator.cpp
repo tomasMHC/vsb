@@ -7,32 +7,34 @@
 // #include "projekt_tradingSimulator.h"
 using namespace std;
 
-class Instrument {                                              // Trieda Instrument je abstraktná, pretože obsahuje čistě virtuální metody getType(), updatePrice() a calculateFee().
+class Interface {
+    public:
+        virtual ~Interface() {};
+        virtual void printInfo() = 0;
+};
+
+
+class Instrument : public Interface {                                              // Trieda Instrument je abstraktná, pretože obsahuje čistě virtuální metody getType(), updatePrice() a calculateFee().
     protected:                                                  // Instrument má dve dedičné triedy - Stock a Option. Option má dve dedičné triedy - OptionCall a OptionPut.
         string name;
-        string symbol;
         double price;
 
     public:
         virtual ~Instrument() = default;  
         string getName();
         double getPrice();
-        string getSymbol();
 
         virtual string getType() = 0;                       
         virtual void updatePrice(double p) {this->price = p;};                 // abstraktne metody - musia být implementované v dědičných třídách
         virtual double calculateFee() {return price * 0.1;};                  // pretizena metoda
 };
-string Instrument::getSymbol() {
-    return this->symbol;
-}
+
 string Instrument::getName() {
     return this->name;
 }
 double Instrument::getPrice() {
     return this->price;
 }
-
 
 class Stock : public Instrument {
     private:
@@ -42,7 +44,13 @@ class Stock : public Instrument {
         Stock(string n, double p);
         double getDividend();
         string getType() {return "Stock";};
+        void printInfo();
 };
+void Stock::printInfo() {
+    cout << "Ticker: " << name << 
+    "  Price: " << price << 
+    "  Dividend: " << dividend << "\n";
+}
 Stock::Stock(string n, double p, double d) {
     this->name = n;
     this->price = p;
@@ -70,7 +78,17 @@ class Option: public Instrument {
         virtual double getStrikePrice() = 0;
         virtual string getExpirationDate()  = 0;
         virtual double getStrike() = 0;
+        void printInfo();
 };
+
+void Option::printInfo() {
+    std::cout << getType() << ": " << name
+            << " Strike: " << strikePrice
+            << " Exp: " << expirationDate
+            << " Premium: " << premium
+            << " Price: " << price << "\n";
+}
+
 Option::Option(string n, double p, Stock* underlying) {
     this->underlyingStock = underlying;
     this->name = n;
@@ -593,32 +611,19 @@ void Market::printStocks() {
     cout << "List of Stocks: " << this->name << ":" << endl;
     for (int i = 0; i < this->instrumentCount; i++) {
         if (this->instruments[i]->getType() == "Stock") {
-            cout << " - " << this->instruments[i]->getType() << ": " << this->instruments[i]->getName() << ",   Price: " << this->instruments[i]->getPrice() << endl;
+            instruments[i]->printInfo();
         }
     }
 }
 void Market::printOptions() {
     cout << "List of Options: " << this->name << ":" << endl;
-
     for (int i = 0; i < instrumentCount; i++) {
         string t = instruments[i]->getType();
-
         if (t == "OptionCall") {
-            OptionCall* opt = (OptionCall*) instruments[i];   // bezpečné, lebo typ sme overili
-            cout << " - OptionCall: " << opt->getName()
-                 << ", Strike: " << opt->getStrike()
-                 << ", Price: " << opt->getPrice()
-                 << ", Expiration: " << opt->getExpirationDate()
-                 << endl;
+            instruments[i]->printInfo();
         }
-
         if (t == "OptionPut") {
-            OptionPut* opt = (OptionPut*) instruments[i];
-            cout << " - OptionPut: " << opt->getName()
-                 << ", Strike: " << opt->getStrike()
-                 << ", Price: " << opt->getPrice()
-                 << ", Expiration: " << opt->getExpirationDate()
-                 << endl;
+            instruments[i]->printInfo();
         }
     }
 }
