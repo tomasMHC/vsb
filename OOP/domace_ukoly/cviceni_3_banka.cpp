@@ -162,12 +162,22 @@ Bank::~Bank() {
     for (int i = 0; i < accountsCount; i++) delete accounts[i];
     delete[] accounts;
 }
-Client* Bank::getClient(int c) {
-    return this->clients[c];
+Client* Bank::getClient(int code) {
+    for (int i = 0; i < clientsCount; i++) {
+        if (clients[i]->getCode() == code)
+            return clients[i];
+    }
+    return nullptr;
 }
-Account* Bank::getAccount(int a) {
-    return this->accounts[a];
+
+Account* Bank::getAccount(int number) {
+    for (int i = 0; i < accountsCount; i++) {
+        if (accounts[i]->getNumber() == number)
+            return accounts[i];
+    }
+    return nullptr;
 }
+
 Client* Bank::createClient(int c, string n) {
     Client *newObject = new Client(c, n);
     this->clients[this->clientsCount] = newObject;
@@ -207,30 +217,22 @@ int Bank::getClientsCount() {
 }
 
 int main() {
-    Bank *bank = new Bank(10, 10);
+    Bank* bank = new Bank(100, 100);
     Account::setDefaultIR(0.02);
 
-    Client *client1 = bank->createClient(1, "Tomas");
-    Account *account1 = bank->createAccount(1, client1, 0.05);
-    account1->Deposit(1000);
-    cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
-    
-    cout << "Clients count: " << bank->getClientsCount() << endl;
+    for (int i = 0; i < 10; ++i) {
+        Client* c = bank->createClient(1000 + i, "Client_" + to_string(i));
+        Account* a = bank->createAccount(2000 + i, c);
+        a->Deposit(1000 + i * 100);
+    }
 
-    Client *client2 = bank->createClient(2, "Jana");
-    Account *account2 = bank->createAccount(2, client2, client1);
-    account2->Deposit(2000);
-    cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
-
-    // Pridani uctu
-    cout << "Clients count: " << bank->getClientsCount() << endl;
-    
-    // Pridani uroku
     bank->addInterest();
-    cout << "Account 1 rate: " << account1->getInterestRate() << " balance: " << account1->getBalance() << endl;
-    cout << "Account 2 rate: " << account2->getInterestRate() << " balance: " << account2->getBalance() << endl;
+
+    Account* acc = bank->getAccount(2005);
+    if (acc != nullptr) {
+        cout << "Account 2005 balance: " << acc->getBalance() << endl;
+    }
 
     delete bank;
-
     return 0;
 }
