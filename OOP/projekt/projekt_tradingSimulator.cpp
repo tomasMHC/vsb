@@ -160,6 +160,7 @@ class Order {                                                       // Trieda Or
 
     public:
         Order(Instrument* i, double q, double p);
+        virtual ~Order() {};
         Instrument* getInstrument() const;
         double getQuantity() const;
         double getPrice() const;
