@@ -1,31 +1,31 @@
 #include <iostream>
 #include <iomanip>
-
 #include <string>
-// #include <format>
 #include <bits/stdc++.h>
-// #include "projekt_tradingSimulator.h"
 using namespace std;
 
-class Instrument {                                              // Trieda Instrument je abstraktná, pretože obsahuje čistě virtuální metody getType(), updatePrice() a calculateFee().
+class Interface {                                               // 9** čiste absrtaktni trida
+    public:
+        virtual ~Interface() {};
+        virtual void printInfo() = 0;                           // 7** late binding
+};
+
+
+class Instrument : public Interface {
     protected:                                                  // Instrument má dve dedičné triedy - Stock a Option. Option má dve dedičné triedy - OptionCall a OptionPut.
         string name;
-        string symbol;
         double price;
 
     public:
         virtual ~Instrument() = default;  
         string getName();
         double getPrice();
-        string getSymbol();
-
+        // abstraktne metody - musia být implementované v dědičných třídách
         virtual string getType() = 0;                       
-        virtual void updatePrice(double p) {this->price = p;};                 // abstraktne metody - musia být implementované v dědičných třídách
-        virtual double calculateFee() {return price * 0.1;};                  // pretizena metoda
+        virtual void updatePrice(double p) {this->price = p;};                // neni pretizena - virtual a default hodnota, potom prepisovana v dalsich triedach
+        virtual double calculateFee() {return price * 0.1;};                  // neni pretizena metoda - je to prekryti = stejna signatura, zmena chovani
 };
-string Instrument::getSymbol() {
-    return this->symbol;
-}
+
 string Instrument::getName() {
     return this->name;
 }
@@ -33,16 +33,21 @@ double Instrument::getPrice() {
     return this->price;
 }
 
-
-class Stock : public Instrument {
+class Stock : public Instrument {                   // rozsirenie dat oproti Instrument: dividend
     private:
         double dividend;
     public:
-        Stock(string n, double p, double d);
-        Stock(string n, double p);
-        double getDividend();
+        Stock(string n, double p, double d);        // 4** pretizeni
+        Stock(string n, double p);                  
+        double getDividend();                       // 7** rozsireni metod oproti Instrument
         string getType() {return "Stock";};
+        void printInfo();
 };
+void Stock::printInfo() {
+    cout << "Ticker: " << name << 
+    "  Price: " << price << 
+    "  Dividend: " << dividend << "\n";
+}
 Stock::Stock(string n, double p, double d) {
     this->name = n;
     this->price = p;
@@ -56,7 +61,7 @@ double Stock::getDividend() {
     return this->dividend;
 }
 
-class Option: public Instrument {
+class Option: public Instrument {                   // 7** rozsireni dat oproti Instrument
     protected:
         double strikePrice;
         double underlyingPrice;
@@ -67,29 +72,37 @@ class Option: public Instrument {
     public:
         Option(string n, double p, Stock* underlying);
         virtual ~Option();
-        virtual double getStrikePrice() = 0;
+        virtual double getStrikePrice() = 0;        // 7** rozsireni metod oproti Instrument
         virtual string getExpirationDate()  = 0;
         virtual double getStrike() = 0;
+        void printInfo();
 };
+
+void Option::printInfo() {
+    std::cout << getType() << ": " << name
+            << " Strike: " << strikePrice
+            << " Exp: " << expirationDate
+            << " Premium: " << premium
+            << " Price: " << price << "\n";
+}
+
 Option::Option(string n, double p, Stock* underlying) {
     this->underlyingStock = underlying;
     this->name = n;
     this->price = p;
 }
-Option::~Option() {
-    // No dynamic memory to clean up in this base class
-}
+Option::~Option() {}
 
 class OptionCall: public Option {
     public:
         OptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         double intrinsicValue();
-         void updatePrice(double p);
+         void updatePrice(double p);                                // 7** late binding
          string getType() {return "OptionCall";};
          double getStrike();
          double getStrikePrice();
          string getExpirationDate();
-         double calculateFee() override {return price * 0.05;};
+         double calculateFee() override {return price * 0.05;};     // 7** late binding
 };
 
 
@@ -152,9 +165,9 @@ void OptionPut::updatePrice(double p) {
     this->price = max(0.0, strikePrice - underlyingPrice+ premium + daysToExp*0.1) ;
 }
 
-class Order {                                                       // Trieda Order je čisto abstraktná, pretože má čistě virtuálnu metodu getType(), ktorá je implementovaná v dědičných třídách Sell a Buy
-    private:                                                        // Order má dve dedičné triedy - Sell a Buy.
-        Instrument* instrument;
+class Order {                                                       // Trieda Order je abstraktná, pretože má čistě virtuálnu metodu getType()
+    private:                                                        // Nie je ale čiste abstraktná, pretoze obsahuje dáta.
+        Instrument* instrument;                                     // Order má dve dedičné triedy - Sell a Buy.
         double quantity;
         double price;
 
@@ -219,7 +232,7 @@ class Position {
         double getValue();
 };
 
-Position::Position(Instrument* i, double q) {
+Position::Position(Instrument* i, double q) {       // 9** polymorfne priradenie - i moze byt Stock, OptionCall alebo OptionPut
     this->instrument = i;
     this->quantity = q;
 }
@@ -262,7 +275,7 @@ class Portfolio {
         Order** getOrders() const;
         // void applyOrder(Order* o);
 
-        double getTotalValue() const;
+        double getTotalValue() const;                       // 4** pretizena metoda
         double getTotalValue(const string& type) const;
 
         void printPortfolio() const;
@@ -301,9 +314,9 @@ class Portfolio {
     }
     Portfolio::Portfolio(Client* o) {
         this->owner = o;
-        this->positions = new Position*[100];  // Assuming a maximum of 100 positions
+        this->positions = new Position*[100];  
         this->positionsCount = 0;
-        this->orders = new Order*[100];  // Assuming a maximum of 100 orders
+        this->orders = new Order*[100];
         this->ordersCount = 0;
         this->cash = 100000.0;  // Initial cash balance
     }
@@ -372,7 +385,7 @@ class Client {
     };
     Client::Client(string n) {          
         this->name = n;
-        this->markets = new Market*[10];  // Assuming a maximum of 10 markets
+        this->markets = new Market*[10];
         this->marketsCount = 0;
         this->portfolio = new Portfolio(this);}
 
@@ -420,7 +433,7 @@ class Market {                                                  // Trieda Market
 
         Instrument* addOptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         Instrument* addOptionPut(string n, double p, string expDate, double strikePrice, Stock* underlying);
-        Instrument* addStock(string n, double p, double d);
+        Instrument* addStock(string n, double p, double d);      // 4** pretizena metoda
         Instrument* addStock(string n, double p);
         Client* addTrader(string t);
         void printTraders();
@@ -440,7 +453,7 @@ class Market {                                                  // Trieda Market
 
 Market::Market(string n, int i, int t) {
     this->name = n;
-    this->instruments = new Instrument*[i];
+    this->instruments = new Instrument*[i];             // 9** polymorfna datova struktura
     this->instrumentCount = 0;
     this->traders = new Client*[t];
     this->tradersCount = 0;
@@ -526,7 +539,7 @@ int Market::getTradersCount() {
             return nullptr;
         }
 
-        Order* o = new Buy(inst, qty, price);
+        Order* o = new Buy(inst, qty, price);                   // 9** polymorfne priradenie - absrtaktna trieda Order vytvára nový objekt Buy
         portfolio->addOrder(o);
 
         Position* pos = portfolio->findPosition(inst);
@@ -558,7 +571,7 @@ int Market::getTradersCount() {
         double fee = inst->calculateFee();
         double totalGain = qty * price - fee;
 
-        Order* o = new Sell(inst, qty, price);
+        Order* o = new Sell(inst, qty, price);              // 9** polymorfne priradenie
         portfolio->addOrder(o);
 
         pos->reduceQuantity(qty);
@@ -596,32 +609,19 @@ void Market::printStocks() {
     cout << "List of Stocks: " << this->name << ":" << endl;
     for (int i = 0; i < this->instrumentCount; i++) {
         if (this->instruments[i]->getType() == "Stock") {
-            cout << " - " << this->instruments[i]->getType() << ": " << this->instruments[i]->getName() << ",   Price: " << this->instruments[i]->getPrice() << endl;
+            instruments[i]->printInfo();
         }
     }
 }
 void Market::printOptions() {
     cout << "List of Options: " << this->name << ":" << endl;
-
     for (int i = 0; i < instrumentCount; i++) {
         string t = instruments[i]->getType();
-
         if (t == "OptionCall") {
-            OptionCall* opt = (OptionCall*) instruments[i];   // bezpečné, lebo typ sme overili
-            cout << " - OptionCall: " << opt->getName()
-                 << ", Strike: " << opt->getStrike()
-                 << ", Price: " << opt->getPrice()
-                 << ", Expiration: " << opt->getExpirationDate()
-                 << endl;
+            instruments[i]->printInfo();
         }
-
         if (t == "OptionPut") {
-            OptionPut* opt = (OptionPut*) instruments[i];
-            cout << " - OptionPut: " << opt->getName()
-                 << ", Strike: " << opt->getStrike()
-                 << ", Price: " << opt->getPrice()
-                 << ", Expiration: " << opt->getExpirationDate()
-                 << endl;
+            instruments[i]->printInfo();
         }
     }
 }
@@ -637,7 +637,7 @@ int main() {
     Client* betka = market1->addTrader("Betka");
     cout << "Pocet obchodnikov: " << market1->getTradersCount() << endl;
 
-    for (int i = 0; i < tickers_US.size(); i++) {                       // ukazka pretizenej metody addStock
+    for (int i = 0; i < tickers_US.size(); i++) {                       // 4** ukazka pretizenej metody addStock
         market1->addStock(tickers_US[i], prices_US[i]);
         market1->addStock(tickers_US_div[i], prices_US[i]*1.5, dividends[i]);
     }
@@ -670,18 +670,9 @@ int main() {
     tomas->getPortfolio()->printPortfolio();
     betka->getPortfolio()->printPortfolio(); 
 
-    // tomas->buy("META_Call", 1, 350, market1);
-    
-    // cout << "Options after price update:" << endl;
     market1->printOptions();
 
-    // for (int i = 0; i < market1->getInstrumentsCount(); i++) {
-    //     if (market1->getInstruments()[i]->getType() == "OptionCall") {
-    //         market1->getInstruments()[i]->updatePrice(market1->getInstruments()[0]->getPrice());
-    //         cout << "Updated price of " << market1->getInstruments()[i]->getName() << ": " << market1->getInstruments()[i]->getStrike() << "  " << market1->getInstruments()[i]->getPrice() << endl;
-    //     }
-    // }
-
     delete market1;
+    getchar();
     return 0;
 }
