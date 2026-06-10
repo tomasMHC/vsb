@@ -287,7 +287,7 @@ int main( int t_narg, char **t_args )
     gpu_flip_image( l_program, l_ocl_load_img );
 
     cv::imshow( "Flipped image", l_cv_load_img );
-   
+    cv::imwrite( "flipped_image.png", l_cv_load_img );
     // wait for key
     cv::waitKey( 0 );
 }
