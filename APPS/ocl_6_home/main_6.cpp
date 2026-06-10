@@ -42,6 +42,35 @@
 // Kernel header from kernel*.cl:
 // __kernel void create_chessboard(          __global OCLImage *t_ocl_img, 
 //                                                    int t_sq_size )
+void fillOCLImageFromMat(OCLImage &img, const cv::Mat &mat)
+{
+    img.m_data = mat.data;
+    img.m_size.x = mat.size().width;
+    img.m_size.y = mat.size().height;
+}
+
+cv::Mat loadImage( const char *t_filename )
+{
+    // load image 
+    cv::Mat l_cv_img = cv::imread( t_filename, cv::IMREAD_UNCHANGED );
+
+    // image read?
+    if ( l_cv_img.empty() )
+    {
+        std::cerr << "Unable to open image '" << t_filename << "'." << std::endl;
+        exit( EXIT_FAILURE );
+    }
+
+    // 3 or 4 channels?
+    if ( l_cv_img.channels() != 4 )
+    {
+        // convert to 4 channels
+        cv::cvtColor( l_cv_img, l_cv_img, cv::COLOR_BGR2BGRA );
+    }
+
+    return l_cv_img;
+}
+
 cl_int gpu_create_chessboard( cl::Program &t_program, OCLImage *t_ocl_img,
                                                       int t_sq_size )
 {
@@ -156,6 +185,54 @@ cl_int gpu_insert_image( cl::Program &t_program, OCLImage *t_ocl_big_img,
     return CL_SUCCESS;
 }
 
+cl_int gpu_flip_image( cl::Program &t_program, OCLImage *t_ocl_img )
+{
+    cl_int l_err;
+
+    // removing prefix gpu_
+    std::string l_kern_name( __FUNCTION__ );
+    if ( l_kern_name.find( KERNEL_PREFIX ) == 0 )
+    {
+        l_kern_name.erase( 0, strlen( KERNEL_PREFIX ) );
+    }
+
+    // select the kernel from opencl program
+    cl::Kernel l_kern_flip_image( t_program, l_kern_name.c_str(), &l_err );  CL_ERR_R( l_err );
+
+    // set kernel arguments
+    l_err = l_kern_flip_image.setArg( 0, t_ocl_img );                     CL_ERR_R( l_err );
+
+    // list of SVM pointers for data synchronization
+    l_kern_flip_image.setSVMPointers( {
+            t_ocl_img,
+            t_ocl_img->m_data,
+            } );
+
+    // get default Queue
+    cl::CommandQueue defQueue = cl::CommandQueue::getDefault();
+
+    // size of workgroup, should be multiple of 64, so 256 is OK
+    int l_wg_size_x = 16;
+    int l_wg_size_y = 16;
+    // global range
+    int l_gr_size_x = ( t_ocl_img->m_size.x + ( l_wg_size_x - 1 ) ) / l_wg_size_x * l_wg_size_x;
+    int l_gr_size_y = ( t_ocl_img->m_size.y + ( l_wg_size_y - 1 ) ) / l_wg_size_y * l_wg_size_y;
+
+    // Submitting kernel for execution
+    l_err = defQueue.enqueueNDRangeKernel( l_kern_flip_image,
+            // offset
+            cl::NDRange( 0, 0 ),
+            // global range
+            cl::NDRange( l_gr_size_x, l_gr_size_y ),
+            // work-group
+            cl::NDRange( l_wg_size_x, l_wg_size_y ) );                          CL_ERR_R( l_err );
+
+    // waiting for completion
+    defQueue.finish();
+
+    return CL_SUCCESS;
+}
+
 // **************************************************************************
 #define IMG_SIZEX   876
 #define IMG_SIZEY   765
@@ -187,107 +264,30 @@ int main( int t_narg, char **t_args )
     // creating SVM allocator for cv::Mat
     SVMMatAllocator svmallocator;
     cv::Mat::setDefaultAllocator( &svmallocator );
+    cv::Mat l_cv_load_img; // empty image
 
-    // creating empty image
-    cv::Mat l_cv_background_img( IMG_SIZEY, IMG_SIZEX, CV_8UC4 );
-
-    // Background OCLImage for kernel
-    OCLImage *l_ocl_background_img = ocl_svm_malloc< OCLImage >();
-    l_ocl_background_img->m_size.x = l_cv_background_img.size().width;
-    l_ocl_background_img->m_size.y = l_cv_background_img.size().height;
-    l_ocl_background_img->m_data = l_cv_background_img.data;
-
-    gpu_create_chessboard( l_program, l_ocl_background_img, 3 );
-    
-    // show created chessboard
-    cv::imshow( "Chessboard", l_cv_background_img );
-
-    cv::Mat l_cv_load_img;
+    l_cv_load_img = loadImage( t_args[ 1 ] );
 
     std::cout << "Opening image: '" << t_args[ 1 ] << "'." << std::endl;
-
-    l_cv_load_img = cv::imread( t_args[ 1 ], cv::IMREAD_UNCHANGED );
-
-    if ( !l_cv_load_img.empty() && l_cv_load_img.channels() == 4 )
+    // load image from file?
+    if ( !l_cv_load_img.empty() )
     {
         std::cout << "Image loaded." << std::endl;
     }
-    else if ( l_cv_load_img.channels() != 4 )
-    {
-        std::cout << "Image is not transparent!" << std::endl;        
-        exit( EXIT_FAILURE );
-    }
     else
     {
-        std::cout << "Unable to read image!" << std::endl; 
+        std::cout << "Unable to read image!" << std::endl;
         exit( EXIT_FAILURE );
     }
 
     OCLImage *l_ocl_load_img = ocl_svm_malloc< OCLImage >();
-    l_ocl_load_img->m_size.x = l_cv_load_img.size().width;
-    l_ocl_load_img->m_size.y = l_cv_load_img.size().height;
-    l_ocl_load_img->m_data = l_cv_load_img.data;
+    fillOCLImageFromMat( *l_ocl_load_img, l_cv_load_img );
 
-    // copy of background
-    cv::Mat l_cv_bg_backup_img;
-    l_cv_background_img.copyTo( l_cv_bg_backup_img );
-
-    // animation
-    // positive z axis is up
-    float anim_g = -9.81; 
-    // one m is 1000 pixel
-    int anim_ppm = 1000;
-    // starting position is above background image
-    float anim_sz0 = ( float ) l_cv_background_img.rows / anim_ppm;
-    // formula: s = 0.5 * a * t * t
-    // time of the first cycle
-    float anim_tc = sqrtf( anim_sz0 / ( 0.5 * - anim_g ) );
-    // starting speed
-    float anim_vz0 = 0;
-
-    timeval anim_tv_start;
-    gettimeofday( &anim_tv_start, nullptr );
-
-    while ( 1 )
-    {
-        timeval anim_tv_cur, anim_tv_delta;
-        gettimeofday( &anim_tv_cur, nullptr );
-        timersub( &anim_tv_cur, &anim_tv_start, &anim_tv_delta );
-
-        // current time in cycle
-        float anim_t = anim_tv_delta.tv_sec + anim_tv_delta.tv_usec / 1000000.0;
-
-        // new z position (height)
-        float anim_z = anim_sz0 + anim_vz0 * anim_t + 0.5 * anim_g * anim_t * anim_t;
-
-        cl_int2 ipos = {{ IMG_SIZEX / 2, 0 }};
-        ipos.y = l_ocl_background_img->m_size.y - anim_z * anim_ppm - l_ocl_load_img->m_size.y;
-
-        // restore background
-        l_cv_bg_backup_img.copyTo( l_cv_background_img );
-
-        gpu_insert_image( l_program, l_ocl_background_img, l_ocl_load_img, ipos );
-
-        cv::imshow( "Chessboard", l_cv_background_img );
-        cv::waitKey( 1 );
     
-        // one cycle passed
-        if ( anim_t > anim_tc )
-        {
-            if ( anim_vz0 == 0 ) anim_vz0 = - anim_g * anim_tc; // speed upon impact
-            anim_vz0 = anim_vz0 * 0.8;          // impact reduces energy/speed
-            anim_t = anim_t - anim_tc;          // time to next cycle
-            anim_tc = - 2 * anim_vz0 / anim_g;  // new time cycle (up/down)
-            anim_sz0 = 0;                       // starting position is at the bottom.
-            if ( anim_tc < 0.01 ) break;        // good time to stop animation
+    gpu_flip_image( l_program, l_ocl_load_img );
 
-            // new cycle starting tv_time
-            anim_tv_delta.tv_sec = ( int ) anim_t;
-            anim_tv_delta.tv_usec = ( anim_t - ( int ) anim_t ) * 1000000;
-            timeradd( &anim_tv_cur, &anim_tv_delta, &anim_tv_start );
-        }
-    }
-   
+    cv::imshow( "Flipped image", l_cv_load_img );
+    cv::imwrite( "flipped_image.png", l_cv_load_img );
     // wait for key
     cv::waitKey( 0 );
 }

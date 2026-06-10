@@ -247,10 +247,14 @@ cl_int gpu_rotate_img( cl::Program &t_program, OCLImage *t_ocl_orig_img, OCLImag
     // select the kernel from opencl program
     cl::Kernel l_kern_rotate_img( t_program, l_kern_name.c_str(), &l_err );  CL_ERR_R( l_err );
 
+    float s = sinf(t_angle);
+    float c = cosf(t_angle);
+
     // set kernel arguments
     l_err = l_kern_rotate_img.setArg( 0, t_ocl_orig_img );                     CL_ERR_R( l_err );
     l_err = l_kern_rotate_img.setArg( 1, t_ocl_rotated_img );                   CL_ERR_R( l_err );
-    l_err = l_kern_rotate_img.setArg( 2, t_angle );                                  CL_ERR_R( l_err );
+    l_err = l_kern_rotate_img.setArg( 2, s );                                  CL_ERR_R( l_err );
+    l_err = l_kern_rotate_img.setArg( 3, c );                                  CL_ERR_R( l_err );
 
     // list of SVM pointers for data synchronization
     l_kern_rotate_img.setSVMPointers( {
@@ -277,7 +281,12 @@ cl_int gpu_rotate_img( cl::Program &t_program, OCLImage *t_ocl_orig_img, OCLImag
             // global range
             cl::NDRange( l_gr_size_x, l_gr_size_y ),
             // work-group
-            cl::NDRange( l_wg_size_x, l_wg_size_y ) );
+            cl::NDRange( l_wg_size_x, l_wg_size_y ) );              CL_ERR_R( l_err );
+    
+    // waiting for completion
+    defQueue.finish();
+
+    return CL_SUCCESS;
 }
 
 
@@ -328,14 +337,25 @@ int main( int t_narg, char **t_args )
         exit( EXIT_FAILURE );
     }
 
+
+
     OCLImage *l_ocl_load_img = ocl_svm_malloc< OCLImage >();
     fillOCLImageFromMat( *l_ocl_load_img, l_cv_load_img );
 
-    
-    gpu_flip_image( l_program, l_ocl_load_img );
+    // 1. cast : Flip image horizontally
+    // gpu_flip_image( l_program, l_ocl_load_img );
 
-    cv::imshow( "Flipped image", l_cv_load_img );
-    cv::imwrite( "flipped_image.png", l_cv_load_img );
+    // 2. cast : Rotate image by angle
+    cv::Mat l_cv_img_rotated(l_cv_load_img.rows, l_cv_load_img.cols, CV_8UC4);
+    OCLImage *l_ocl_img_rotated = ocl_svm_malloc<OCLImage>();
+    fillOCLImageFromMat(*l_ocl_img_rotated, l_cv_img_rotated);
+
+    float angle_deg = 90;
+    float angle = angle_deg * M_PI / 180.0f; // in radians
+    gpu_rotate_img( l_program, l_ocl_load_img, l_ocl_img_rotated, angle );
+
+    cv::imshow( "Rotated image", l_cv_img_rotated );
+    cv::imwrite( "rotated_image.png", l_cv_img_rotated );
     // wait for key
     cv::waitKey( 0 );
 }
