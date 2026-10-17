@@ -460,7 +460,7 @@ Market::Market(string n, int i, int t) {
 }
 
 Market::~Market() {
-    for (int i = 0; i < instrumentCount; i++) delete instruments[i];
+    for (int i = 0; i < instrumentCount; i++) delete instruments[i];  // vyuzije sa virtualny destruktor Stock, Option - volame delete z Base (Instrument) na Derived triedy
     delete[] instruments;
     
     for (int i = 0; i < tradersCount; i++) delete traders[i];

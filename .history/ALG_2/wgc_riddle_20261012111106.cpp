@@ -1,0 +1,163 @@
+#include <iostream>
+#include <fstream>
+#include <stack>
+#include <string>
+#include <vector>
+#include <sstream>
+
+class State {
+public:
+    bool prevoznik;
+    bool vlk;
+    bool koza;
+    bool zeli;
+
+    State(bool p, bool v, bool k, bool z)
+        : prevoznik(p), vlk(v), koza(k), zeli(z) {}
+
+    bool isValid() const;
+    bool isGoal() const;
+    std::string toString() const;
+};
+
+bool State::isValid() const
+{
+    if (vlk == koza && prevoznik != vlk)
+        return false;
+
+    if (koza == zeli && prevoznik != koza)
+        return false;
+
+    return true;
+}
+bool State::isGoal() const
+{
+    return prevoznik &&
+           vlk &&
+           koza &&
+           zeli;
+}
+
+#include <vector>
+
+class Graph
+{
+private:
+    std::vector<State> states;
+    std::vector<std::vector<int>> adj;
+
+public:
+    Graph();
+    void bfs(int start);
+};
+
+Graph::Graph()
+{
+    for(int p=0; p<2; ++p)
+    for(int v=0; w<2; ++w)
+    for(int =0; g<2; ++g)
+    for(int c=0; c<2; ++c)
+    {
+        State s(p,w,g,c);
+
+        if(s.isValid())
+            states.push_back(s);
+    }
+
+    adj.resize(states.size());
+
+    for(size_t i=0;i<states.size();++i)
+    {
+        for(size_t j=0;j<states.size();++j)
+        {
+            if(i!=j)
+            {
+                // determine whether move i->j is legal
+            }
+        }
+    }
+}
+
+
+std::vector<std::vector<int>> read_lines(const std::string& filename) {
+    std::ifstream file(filename);
+    int N;
+    file >> N;
+    std::vector<std::vector<int>> data(N, std::vector<int>(N, 0));
+    int a, b;
+    while (file >> a >> b) {
+        data[a][b] = 1;
+    }
+    return data;
+}
+
+void print_matrix( std::vector<std::vector<int>>& matrix ) {
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix[i].size(); j++) {
+            std::cout << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+bool find_celebrity(const std::vector<std::vector<int>>& knows, int& celebrity, std::string& result) {                  // O(N^2) algoritmus, prejde vsetkych N ludi a porovna ich s ostatnymi N-1 ludmi, ci su celebrity alebo nie.
+    int N = knows.size();
+    for (int i = 0; i < N; i++) {
+        bool is_celebrity = true;
+        for (int j = 0; j < N; j++) {
+            if (i != j) {
+                if (knows[i][j] == 1 || knows[j][i] == 0) {
+                    is_celebrity = false;
+                    break;
+                }
+            }
+        }
+        if (is_celebrity) {
+            celebrity = i;
+            result = "Celebrity found: " + std::to_string(i);
+            return true;
+        }
+    }
+    result = "No celebrity found.";
+    return false;
+}
+
+bool find_celebrity_ON(const std::vector<std::vector<int>>& knows, int& celebrity, std::string& result) {           // O(N) algoritmus, prejde vsetkych N ludi len raz, a porovna ich s ostatnymi N-1 ludmi, ci su celebrity alebo nie. Najprv sa najde kandidat na celebrity, a potom sa overi ci je to celebrity alebo nie.
+    int N = knows.size();
+    int candidate = 0;
+    for (int i =0; i < N; i++) {
+        if (knows[candidate][i] == 1) {
+            candidate = i;
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        if (i != candidate) {
+            if (knows[candidate][i] == 1) {
+                result = "No celebrity found.";
+                return false;
+            }
+        
+            if (knows[i][candidate] == 0) {
+                result = "No celebrity found.";
+                return false;
+            }
+        }
+    }
+    celebrity = candidate;
+    result = "Celebrity found: " + std::to_string(candidate);
+    return true;
+}
+
+int main() {
+
+    std::vector<std::vector<int>> knows = read_lines("party.txt");
+    print_matrix(knows);
+    int celebrity;
+    std::string result;
+    if (find_celebrity_ON(knows, celebrity, result)) {
+        std::cout << result << std::endl;
+    } else {
+        std::cout << result << std::endl;
+    }
+    return 0;
+}

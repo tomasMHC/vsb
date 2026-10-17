@@ -47,10 +47,7 @@ PolozkaFaktury::PolozkaFaktury(string nazev, int pocet, double cena) {          
     this->pocet = pocet;
     this->cena = cena;
 }
-// PolozkaFaktury::PolozkaFaktury() {}
-PolozkaFaktury::~PolozkaFaktury() {
-
-}
+PolozkaFaktury::~PolozkaFaktury() {}
 
 class Faktura {
     private:
