@@ -1,0 +1,15 @@
+/home/tomas/vsb/C#/MazeProject/bin/Debug/net8.0/MazeProject
+/home/tomas/vsb/C#/MazeProject/bin/Debug/net8.0/MazeProject.deps.json
+/home/tomas/vsb/C#/MazeProject/bin/Debug/net8.0/MazeProject.runtimeconfig.json
+/home/tomas/vsb/C#/MazeProject/bin/Debug/net8.0/MazeProject.dll
+/home/tomas/vsb/C#/MazeProject/bin/Debug/net8.0/MazeProject.pdb
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.GeneratedMSBuildEditorConfig.editorconfig
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.AssemblyInfoInputs.cache
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.AssemblyInfo.cs
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.csproj.CoreCompileInputs.cache
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.sourcelink.json
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.dll
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/refint/MazeProject.dll
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.pdb
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/MazeProject.genruntimeconfig.cache
+/home/tomas/vsb/C#/MazeProject/obj/Debug/net8.0/ref/MazeProject.dll

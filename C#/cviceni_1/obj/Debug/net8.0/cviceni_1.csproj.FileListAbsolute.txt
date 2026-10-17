@@ -1,0 +1,15 @@
+/home/tomas/vsb/C#/cviceni_1/bin/Debug/net8.0/cviceni_1
+/home/tomas/vsb/C#/cviceni_1/bin/Debug/net8.0/cviceni_1.deps.json
+/home/tomas/vsb/C#/cviceni_1/bin/Debug/net8.0/cviceni_1.runtimeconfig.json
+/home/tomas/vsb/C#/cviceni_1/bin/Debug/net8.0/cviceni_1.dll
+/home/tomas/vsb/C#/cviceni_1/bin/Debug/net8.0/cviceni_1.pdb
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.GeneratedMSBuildEditorConfig.editorconfig
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.AssemblyInfoInputs.cache
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.AssemblyInfo.cs
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.csproj.CoreCompileInputs.cache
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.sourcelink.json
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.dll
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/refint/cviceni_1.dll
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.pdb
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/cviceni_1.genruntimeconfig.cache
+/home/tomas/vsb/C#/cviceni_1/obj/Debug/net8.0/ref/cviceni_1.dll

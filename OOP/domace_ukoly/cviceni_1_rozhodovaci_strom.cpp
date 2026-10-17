@@ -64,11 +64,9 @@ int main() {
     right->createRight("right-right", "G");
 
     // príklad výpisu
-    cout << root->getKey() << endl;
-    cout << root->getLeft()->getKey() << endl;
-    cout << root->getLeft()->getValue() << endl;
-    cout << root->getRight()->getKey() << endl;
-    cout << root->getRight()->getValue() << endl;
+    cout << root->getKey() << root->getValue() << endl;
+    cout << root->getLeft()->getKey() << root->getLeft()->getValue() << endl;
+    cout << root->getRight()->getKey() << root->getRight()->getValue() << endl;
 
     delete root; // zmaže celý strom rekurzívne
 

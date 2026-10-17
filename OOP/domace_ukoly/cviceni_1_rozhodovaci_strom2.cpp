@@ -76,7 +76,7 @@ void printPretty(DecisionNode* node, string prefix = "", bool isLeft = false) {
     if (!node->getValue().empty())
         cout << " (" << node->getValue() << ")";
 
-    cout << endl;
+        cout << endl;
 
     // Print left subtree
     printPretty(node->getLeft(), prefix + (isLeft ? "    " : "│   "), true);
@@ -87,14 +87,14 @@ int main() {
     DecisionNode *yes = root->createLeft("Je to domestikované?", "");
     DecisionNode *no  = root->createRight("Má perie?", "");
 
-    yes->createLeft("Pes", "Canis lupus familiaris");
+    yes->createLeft("Pes", "Canis lupus");
     yes->createRight("Mačka", "Felis catus");
 
     DecisionNode *bird = no->createRight("Vie lietať?", "");
     DecisionNode *reptile = no->createLeft("Má šupiny?", "");
 
-    bird->createLeft("Sliepka", "Gallus gallus domesticus");
-    bird->createRight("Orol", "Aquila chrysaetos");
+    bird->createLeft("Sliepka", "Gallus");
+    bird->createRight("Orol", "Aquila");
 
     reptile->createLeft("Jašterica", "Lacertilia");
     reptile->createRight("Had", "Serpentes");

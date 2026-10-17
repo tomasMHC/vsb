@@ -4,7 +4,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Interface {                                               // 9** čiste absrtaktni trida
+class Interface {                                               // 8** čiste absrtaktni trida
     public:
         virtual ~Interface() {};
         virtual void printInfo() = 0;                           // 7** late binding
@@ -22,8 +22,8 @@ class Instrument : public Interface {
         double getPrice();
         // abstraktne metody - musia být implementované v dědičných třídách
         virtual string getType() = 0;                       
-        virtual void updatePrice(double p) {this->price = p;};                // neni pretizena - virtual a default hodnota, potom prepisovana v dalsich triedach
-        virtual double calculateFee() {return price * 0.1;};                  // neni pretizena metoda - je to prekryti = stejna signatura, zmena chovani
+        virtual void updatePrice(double p) {this->price = p;};                // override - virtual a default hodnota, potom prepisovana v dalsich triedach
+        virtual double calculateFee() {return price * 0.1;};                  // override - neni pretizena metoda - je to prekryti = stejna signatura, zmena chovani
 };
 
 string Instrument::getName() {
@@ -39,8 +39,8 @@ class Stock : public Instrument {                   // rozsirenie dat oproti Ins
     public:
         Stock(string n, double p, double d);        // 4** pretizeni
         Stock(string n, double p);                  
-        double getDividend();                       // 7** rozsireni metod oproti Instrument
-        string getType() {return "Stock";};
+        double getDividend();                       // 7** rozsireni metod oproti Instrument - nova metoda
+        string getType() {return "Stock";};         // 7** rozsirenie metod - ina logika
         void printInfo();
 };
 void Stock::printInfo() {
@@ -97,7 +97,7 @@ class OptionCall: public Option {
     public:
         OptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         double intrinsicValue();
-         void updatePrice(double p);                                // 7** late binding
+         void updatePrice(double p);                                // 7** late binding - rozsirenie spravania
          string getType() {return "OptionCall";};
          double getStrike();
          double getStrikePrice();
@@ -375,7 +375,7 @@ class Client {
         int marketsCount;
         Portfolio* portfolio;
     public:
-        Client(string n);
+        Client(string n);                   // 3** kompozice - vytvorenie Portfolia this->portfolio = new Portfolio(this) 
         ~Client() {delete portfolio; delete[] markets;};
         string getName();
         void addMarket(Market* m);
@@ -433,7 +433,7 @@ class Market {                                                  // Trieda Market
 
         Instrument* addOptionCall(string n, double p, string expDate, double strikePrice, Stock* underlying);
         Instrument* addOptionPut(string n, double p, string expDate, double strikePrice, Stock* underlying);
-        Instrument* addStock(string n, double p, double d);      // 4** pretizena metoda
+        Instrument* addStock(string n, double p, double d);      // 3** , 4** : kompozice , pretizena metoda
         Instrument* addStock(string n, double p);
         Client* addTrader(string t);
         void printTraders();
@@ -486,7 +486,7 @@ Instrument* Market::addStock(string n, double p) {
 }
 
 Instrument* Market::addStock(string n, double p, double d) {
-    Stock *newObject = new Stock(n, p, d);
+    Stock *newObject = new Stock(n, p, d);                          // 5** trieda v roli objektu
     this->instruments[this->instrumentCount] = newObject;
     this->instrumentCount += 1;
     generateOptionsForStock(newObject);
@@ -508,7 +508,7 @@ Instrument* Market::addOptionPut(string n, double p, string expDate, double stri
 }
 
 
-Client* Market::addTrader(string t) {
+Client* Market::addTrader(string t) {                       // 3** kompozice
     Client *newObject = new Client(t);
     this->traders[this->tradersCount] = newObject;
     this->tradersCount += 1;
@@ -539,7 +539,7 @@ int Market::getTradersCount() {
             return nullptr;
         }
 
-        Order* o = new Buy(inst, qty, price);                   // 9** polymorfne priradenie - absrtaktna trieda Order vytvára nový objekt Buy
+        Order* o = new Buy(inst, qty, price);                   // 5** 9** trieda v roli objektu , polymorfne priradenie - absrtaktna trieda Order vytvára nový objekt Buy
         portfolio->addOrder(o);
 
         Position* pos = portfolio->findPosition(inst);

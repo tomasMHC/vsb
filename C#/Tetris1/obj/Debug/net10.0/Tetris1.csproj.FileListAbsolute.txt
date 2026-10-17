@@ -1,0 +1,15 @@
+/home/tomas/vsb/C#/Tetris1/bin/Debug/net10.0/Tetris1
+/home/tomas/vsb/C#/Tetris1/bin/Debug/net10.0/Tetris1.deps.json
+/home/tomas/vsb/C#/Tetris1/bin/Debug/net10.0/Tetris1.runtimeconfig.json
+/home/tomas/vsb/C#/Tetris1/bin/Debug/net10.0/Tetris1.dll
+/home/tomas/vsb/C#/Tetris1/bin/Debug/net10.0/Tetris1.pdb
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.GeneratedMSBuildEditorConfig.editorconfig
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.AssemblyInfoInputs.cache
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.AssemblyInfo.cs
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.csproj.CoreCompileInputs.cache
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.sourcelink.json
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.dll
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/refint/Tetris1.dll
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.pdb
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/Tetris1.genruntimeconfig.cache
+/home/tomas/vsb/C#/Tetris1/obj/Debug/net10.0/ref/Tetris1.dll
