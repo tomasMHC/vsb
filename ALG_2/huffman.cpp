@@ -1,3 +1,5 @@
+//vytvori huffmanovo kodovanie na zaklade nacitaneho txt suboru s pocetnostami jednotlivych znakov.
+
 #include <iostream>
 #include <fstream>
 #include <queue>
@@ -13,7 +15,12 @@ public:
     Node* left;
     Node* right;
 
-    Node(char s, int f) : symbol(s), freq(f), left(nullptr), right(nullptr) {}
+    Node(char s, int f) {
+    symbol = s;
+    freq = f;
+    left = nullptr;
+    right = nullptr;
+    }
 };
 
 class Compare {
@@ -24,24 +31,28 @@ public:
 };
 
 void generateCodes(Node* node, string code,
-                   map<char, string>& codes)
+                   map<char, string>& kody)
 {
     if (!node) return;
-
     if (!node->left && !node->right) {
-        codes[node->symbol] = code;
+        kody[node->symbol] = code;
         return;
     }
 
-    generateCodes(node->left, code + "0", codes);
-    generateCodes(node->right, code + "1", codes);
+    generateCodes(node->left, code + "0", kody );
+    generateCodes(node->right, code + "1", kody );
 }
 
-int main()
-{
-    priority_queue<Node*, vector<Node*>, Compare> pq;
+int main(int argc, char *argv[]) {
 
-    ifstream file("huff.txt");
+    if (argc != 2) {
+        cout << "Pouzitie: " << argv[0] << " <nazov_suboru>\n";
+        return 1;
+    }
+
+    priority_queue<Node*, vector<Node*>, Compare> pq;
+    std::string filename = argv[1];
+    ifstream file(filename);
 
     char c;
     int f;
@@ -64,10 +75,10 @@ int main()
 
     Node* root = pq.top();
 
-    map<char, string> codes;
-    generateCodes(root, "", codes);
+    map<char, string> kody;
+    generateCodes(root, "", kody);
 
-    for (auto& [symbol, code] : codes) {
+    for (auto& [symbol, code] : kody) {
         cout << symbol << " : " << code << '\n';
     }
 
